@@ -1,6 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '../../../lib/mongodb';
 
+function parseDDMMYYYYToDate(dateStr: string): Date | null {
+  const [day, month, year] = dateStr.split('/').map(Number);
+  if (!day || !month || !year || day < 1 || day > 31 || month < 1 || month > 12 || year < 1000) {
+    return null;
+  }
+  return new Date(Date.UTC(year, month - 1, day));
+}
+
+function formatDateDDMMYYYY(date: Date): string {
+  const day = date.getUTCDate().toString().padStart(2, '0');
+  const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+  const year = date.getUTCFullYear();
+  return `${day}/${month}/${year}`;
+}
+
 export async function GET(request: NextRequest) {
   const currentDate = new Date();
 
@@ -11,21 +26,25 @@ export async function GET(request: NextRequest) {
 
     const pastEvents = await events
       .find({ date: { $lt: currentDate } })
-      .sort({ date: -1 })
+      .sort({ date: 1 }) 
       .toArray();
 
     const upcomingEvents = await events
       .find({ date: { $gte: currentDate } })
-      .sort({ date: 1 })
+      .sort({ date: 1 }) 
       .toArray();
 
     const serialize = (arr: any[]) =>
-      arr.map((item) => ({ ...item, _id: item._id.toString() }));
+      arr.map((item) => ({
+        ...item,
+        _id: item._id.toString(),
+        date: formatDateDDMMYYYY(item.date),
+      }));
 
     return NextResponse.json({
       pastEvents: serialize(pastEvents),
       upcomingEvents: serialize(upcomingEvents),
-      currentDate: currentDate.toISOString(),
+      currentDate: formatDateDDMMYYYY(currentDate),
     });
   } catch (err) {
     console.error(err);
@@ -45,12 +64,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const eventDate = new Date(body.date);
+    const eventDate = parseDDMMYYYYToDate(body.date);
+    if (!eventDate) {
+      return NextResponse.json({ error: 'Invalid date format, expected dd/mm/yyyy' }, { status: 400 });
+    }
+
     const now = new Date();
 
     const existingEvent = await events.findOne({
       title: body.title,
-      date: { $gte: now }
+      date: { $gte: now }, 
     });
 
     if (existingEvent) {
@@ -71,4 +94,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to create event' }, { status: 500 });
   }
 }
-
