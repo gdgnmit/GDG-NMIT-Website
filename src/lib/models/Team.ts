@@ -9,6 +9,7 @@ export interface IMember {
 
 export interface ITeam extends Document {
   year: number;
+  name: string;
   members: IMember[];
 }
 
@@ -21,6 +22,7 @@ const MemberSchema: Schema = new Schema<IMember>({
 
 const TeamSchema: Schema = new Schema<ITeam>({
   year: { type: Number, required: true, index: true },
+  name: { type:String},
   members: { type: [MemberSchema], default: [] }
 });
 
