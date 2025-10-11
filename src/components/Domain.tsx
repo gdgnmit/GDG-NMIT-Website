@@ -37,7 +37,8 @@ const Domain = (): JSX.Element => {
           return (
             <div
               key={idx}
-              className="relative flex items-center justify-center overflow-hidden h-[220px] text-black"
+              className="relative flex items-center justify-center overflow-hidden cursor-pointer
+                         w-full max-w-[472px] h-[220px] mx-auto"
               onPointerEnter={() => setActiveIndex(idx)}
               onPointerLeave={() => setActiveIndex(null)}
               onFocus={() => setActiveIndex(idx)}
@@ -45,35 +46,30 @@ const Domain = (): JSX.Element => {
               onClick={() => setActiveIndex(prev => (prev === idx ? null : idx))}
               tabIndex={0}
             >
-              {/* Base image (fixed pixel dimensions) */}
+              {/* Base Image */}
               <img
                 src={img.base}
                 alt={img.alt}
                 width={img.w}
                 height={img.h}
-                className={`object-contain transition-all duration-[600ms] ease-in-out
-                            will-change-transform will-change-opacity
-                            ${isActive ? "scale-[1.06] opacity-0" : "opacity-100 scale-100"}`}
+                className={`object-contain transition-opacity duration-[600ms] ease-in-out
+                            ${isActive ? "opacity-0" : "opacity-100"}`}
                 style={{
                   width: `${img.w}px`,
                   height: `${img.h}px`,
+                  maxWidth: "100%",
+                  maxHeight: "100%",
                 }}
               />
 
-              {/* Hover background (5px inset for consistent responsive layout) */}
+              {/* Hover Div — responsive and inset from all sides */}
               <div
-                className={`absolute transition-all duration-[600ms] ease-in-out
-                            will-change-transform will-change-opacity
-                            ${isActive ? "opacity-100 scale-100" : "opacity-0 scale-[0.96]"}`}
+                className={`absolute inset-[5px] bg-center bg-no-repeat bg-contain transition-opacity duration-[600ms] ease-in-out
+                            ${isActive ? "opacity-100" : "opacity-0"}`}
                 style={{
-                  top: "5px",
-                  left: "5px",
-                  right: "5px",
-                  bottom: "5px",
-                  backgroundImage: isActive ? `url(${img.hover})` : undefined,
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "center",
-                  backgroundSize: "contain",
+                  backgroundImage: `url(${img.hover})`,
+                  width: "calc(100% - 10px)",
+                  height: "calc(100% - 10px)",
                 }}
               />
             </div>
