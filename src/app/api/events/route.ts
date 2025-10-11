@@ -84,6 +84,8 @@ export async function POST(request: NextRequest) {
       title: body.title,
       description: body.description || '',
       date: eventDate,
+      venue: body.venue || '',
+      speaker: body.speaker || null,
     };
 
     const result = await events.insertOne(event);
