@@ -82,14 +82,29 @@
         const obstacle = document.createElement("div");
         obstacle.className = "absolute";
         obstaclesRef.current?.appendChild(obstacle);
-
-        const isBird = Math.random() < 0.3;
-        const imgSrc = isBird ? "/bird.png" : "/vector.png";
-        obstacle.style.width = isBird ? "64px" : "40px";
-        obstacle.style.height = "64px";
-
+      
+        const rand = Math.random();
+        let imgSrc = "";
+        let width = 40;
+        let height = 64;
         let bottomPos = 10;
-        if (isBird) {
+        let isBird = false;
+        let isCloud = false;
+      
+        if (rand < 0.2) {
+          // Cloud (20%)
+          imgSrc = "/cloud.png";
+          width = 100 + Math.random() * 50; // random width for variation
+          height = 60;
+          bottomPos = 200 + Math.random() * 50; // high up
+          isCloud = true;
+        } else if (rand < 0.4) {
+          // Bird (30%)
+          imgSrc = "/bird.png";
+          width = 64;
+          height = 64;
+          isBird = true;
+      
           let tries = 0;
           do {
             bottomPos = 60 + Math.random() * 30;
@@ -99,26 +114,40 @@
             tries < 10
           );
           activeBirds.current.push(bottomPos);
+        } else {
+          // Cactus / obstacle (50%)
+          imgSrc = "/Vector.png";
+          width = 40;
+          height = 64;
         }
-
+      
         const img = document.createElement("img");
         img.src = imgSrc;
         img.style.width = "100%";
         img.style.height = "100%";
         obstacle.appendChild(img);
-
+      
+        obstacle.style.width = `${width}px`;
+        obstacle.style.height = `${height}px`;
         obstacle.style.left = `${window.innerWidth}px`;
         obstacle.style.bottom = `${bottomPos}px`;
-
+      
+        // Determine duration (clouds move slower)
+        const duration = isCloud ? 12 + Math.random() * 3 : 5;
+      
         gsap.to(obstacle, {
-          left: -100,
-          duration: 5,
+          left: -200, // move off screen
+          duration: duration,
           ease: "linear",
           onUpdate: () => {
-            if (!isBird && dinoRef.current) {
+            if (!isBird && !isCloud && dinoRef.current) {
               const dinoLeft = dinoRef.current.offsetLeft;
               const obstacleLeft = obstacle.offsetLeft;
-              if (!isJumping.current && obstacleLeft < dinoLeft + 120 && obstacleLeft > dinoLeft + 50) {
+              if (
+                !isJumping.current &&
+                obstacleLeft < dinoLeft + 120 &&
+                obstacleLeft > dinoLeft + 50
+              ) {
                 dinoJump();
               }
             }
@@ -130,7 +159,7 @@
             obstacle.remove();
           },
         });
-
+      
         setTimeout(spawnObstacle, Math.random() * 2000 + 3000);
       };
 
@@ -163,12 +192,20 @@
           {/* Logo */}
         <div className="flex items-center flex-shrink-0">
       <Image
-        src="/GDG_Logo.jpg"
+        src="/google_logo.png"
         alt="GDG Logo"
-        width={250}
-        height={70}
-        className="w-36 sm:w-44 md:w-52 lg:w-60 h-auto"
+        width={50}
+        height={50}
+        className="w-26 sm:w-26 md:w-26 lg:w-26 h-auto"
       />
+      <div className="flex flex-col align-left justify-center">
+        <h1 className="ml-2 text-xl sm:text-xl md:text-xl lg:text-3xl font-light text-black">
+          Google Developer Groups
+          </h1>
+        <h2 className="ml-2 text-lg sm:text-lg md:text-lg lg:text-lg font-light text-blue-400">
+          Nitte Meenakshi Institute of Technology
+        </h2>
+      </div>
     </div>
 
     {/* Navigation */}
@@ -256,22 +293,36 @@
     />*/}
 
     {/* Dino Game Section */}
-    <section className="flex mt-1 sm:mt-1 lg:mt-1">
-      <div className="relative w-full h-60 sm:h-80 md:h-96 overflow-hidden">
+    <section className="flex mt-1 sm:mt-1 lg:mt-1 ">
+      <div className="relative w-full h-60 sm:h-80 md:h-96 overflow-hidden mt-40">
         {/* Ground */}
-        <div className="absolute bottom-0 w-full h-8 sm:h-10">
-          <Image src="/ground.gif" alt="Ground" fill className="object-cover" />
-        </div>
+        <div className="absolute bottom-3 w-full border-t-2 border-gray-500"></div>
 
         {/* Center Logo */}
-        <div className="absolute left-1/2 lg:left-1/3 sm:left-1/2 lg:-bottom-2 sm:bottom-0 bottom-0 transform -translate-x-1/2 -translate-y-1/8 z-10">
-          <Image
-            src="/gdg_main_logo.png"
-            alt="GDG Logo"
-            width={300}
-            height={300}
-            className=" w-60 sm:w-80 md:w-[900px] lg:w-[730px] h-auto "
-          />
+        <div className="absolute -bottom-9 left-2/5 transform -translate-x-1/2 -translate-y-1/4 z-10"> 
+          <div className="bg-blue-500 w-180 h-20 rounded-4xl justify-end ml-40"> 
+              <div className=" bg-gradient-to-r from-blue-200 to-white w-85 h-20 rounded-4xl flex justify-left align-left"> 
+                <h1 className="text-5xl font-light bg-clip-text mt-3 ml-10 "> 
+                  Google 
+                </h1> 
+              </div> 
+            </div> 
+            <div className="flex flex-row">
+          <div className="bg-yellow-500 w-180 h-20 rounded-4xl flex justify-end"> 
+            <div className="bg-gradient-to-l from-yellow-300 to-white w-95 h-20 rounded-4xl flex justify-left align-left "> 
+              <h1 className="text-5xl font-light bg-clip-text mt-3 ml-5 "> 
+                Developer 
+              </h1> 
+            </div> 
+          </div>
+          </div>
+          <div className="bg-green-600 w-180 h-20 rounded-4xl ml-40 flex justify-end "> 
+            <div className=" bg-gradient-to-l from-green-200 to-white w-65 h-20 rounded-4xl flex justify-left align-left"> 
+              <h1 className="text-5xl font-light bg-clip-text mt-3 ml-5"> 
+                Groups 
+              </h1> 
+            </div> 
+          </div> 
         </div>
 
         {/* Dino */}
@@ -280,7 +331,7 @@
           className="absolute bottom-2 left-6 sm:left-10 w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16"
         >
           <Image
-            src="/dinosaur.png"
+            src="/trex.png"
             alt="Dino"
             width={80}
             height={80}
@@ -311,10 +362,8 @@
       <div className="absolute left-29 top-19 w-71 h-31 rounded-xl bg-white -z-10">
 
         <div className="absolute w-131 h-50 border-2 border-t-transparent bg-white -z-5 rounded-3xl   border-gray-400  border-l-transparent">
-
           {/* Concave top-right */}
           <div className="absolute -top-19 right-1 w-41.5 h-21 border-2 bg-white rounded-xl border-t-transparent  border-gray-400  border-r-transparent rounded-tl-none rounded-br-none"></div>
-
           {/* Concave bottom-left */}
           <div className="absolute bottom-1 -left-28.5 w-30.5 h-20 border-2 bg-white rounded-xl border-b-transparent   border-gray-400  border-l-transparent rounded-br-none rounded-tl-none z-10"></div>
 
