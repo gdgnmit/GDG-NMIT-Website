@@ -5,6 +5,7 @@ export interface IEvent extends Document {
   description?: string;
   date: Date;
   venue?: string;
+  speaker?: string;
   speaker?:string;
 }
 
@@ -13,6 +14,7 @@ const EventSchema: Schema = new Schema<IEvent>({
   description: { type: String },
   date: { type: Date, required: true },
   venue: { type: String },
+  speaker: { type: String }
   speaker: { type: String } 
 });
 
