@@ -10,13 +10,8 @@ export default function Home() {
   return (
     <>
       <HomePage />
-      {/* <Domain/>
-      <Team/>
-      <Event/>
-      <Projects/>
-      <Aboutus/>
+      <Domain/>
       <Contact/> 
-      <Footer/>*/}
     </>
   );
 }

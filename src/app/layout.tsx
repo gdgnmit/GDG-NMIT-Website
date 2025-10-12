@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const googleSans = Roboto({
   variable: "--font-google-sans",
@@ -24,8 +26,9 @@ export default function RootLayout({
       <body
         className={`${googleSans.variable} antialiased`}
       >
-        <Navbar />
+        <Header/>
         {children}
+        <Footer/>
       </body>
     </html>
   );
