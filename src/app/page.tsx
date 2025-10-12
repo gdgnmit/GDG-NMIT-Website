@@ -5,16 +5,18 @@ import Projects from "@/components/Projects";
 import Aboutus from "@/components/Aboutus";
 import Event from "@/components/Event";
 import Contact from "@/components/Contact";
+import Footer from "@/components/Footer";
 export default function Home() {
   return (
     <>
-      <HomePage/>
-      <Domain/>
+      <HomePage />
+      {/* <Domain/>
       <Team/>
       <Event/>
       <Projects/>
       <Aboutus/>
-      <Contact/>
+      <Contact/> 
+      <Footer/>*/}
     </>
   );
 }
