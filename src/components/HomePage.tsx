@@ -3,6 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
+import {
+ 
+  FaInstagram,
+  FaLinkedin,
+  FaFacebookSquare,
+} from "react-icons/fa";
 
 export default function HomeScreen() {
   const dinoRef = useRef<HTMLDivElement>(null);
@@ -12,6 +18,7 @@ export default function HomeScreen() {
   const gridRef = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+
 
   useEffect(() => {
     if (!mobileMenuRef.current) return;
@@ -114,7 +121,8 @@ export default function HomeScreen() {
         activeBirds.current.push(bottomPos);
       } else {
         // Cactus / obstacle (50%)
-        imgSrc = "/assets/Vector.png";
+        const isDarkMode = document.documentElement.classList.contains("dark");
+        imgSrc = "/assets/vector_light.png";
         width = 40;
         height = 64;
       }
@@ -165,179 +173,55 @@ export default function HomeScreen() {
 
     spawnObstacle();
   }, []);
-  interface NavItem {
-    name: string;
-    color: string;
-  }
-  const navItems: NavItem[] = [
-    { name: "ABOUT US", color: "blue" },
-    { name: "DOMAIN", color: "red" },
-    { name: "EVENT", color: "green" },
-    { name: "PROJECTS", color: "yellow" },
-    { name: "TEAM", color: "blue" },
-    { name: "CONTACT US", color: "green" },
-  ];
-  const colorMap: Record<string, string> = {
-    blue: "hover:bg-blue-400 dark:hover:bg-blue-500",
-    red: "hover:bg-red-400 dark:hover:bg-red-500",
-    green: "hover:bg-green-400 dark:hover:bg-green-500",
-    yellow: "hover:bg-yellow-400 dark:hover:bg-yellow-500",
-  };
+  
   return (
-    <main>
-      {/* Header */}
-      <main className="relative bg-white dark:bg-gray-900 overflow-hidden">
-        {/* Header */}
-        <header className="flex justify-between items-center p-3 sm:p-4 bg-white dark:bg-gray-900 shadow-md dark:shadow-gray-800 fixed z-20 w-full border-b border-gray-200 dark:border-gray-700">
-          {/* Logo */}
-          <div className="flex items-center flex-shrink-0">
-            <Image
-              src="/assets/google_logo.png"
-              alt="GDG Logo"
-              width={50}
-              height={50}
-              className="w-26 sm:w-26 md:w-26 lg:w-26 h-auto"
-            />
-            <div className="flex flex-col align-left justify-center">
-              <h1 className="ml-2 text-xl sm:text-xl md:text-xl lg:text-3xl font-light text-black dark:text-white">
-                Google Developer Groups
-              </h1>
-              <h2 className="ml-2 text-lg sm:text-lg md:text-lg lg:text-lg font-light text-blue-400 dark:text-blue-300">
-                Nitte Meenakshi Institute of Technology
-              </h2>
-            </div>
-          </div>
-
-          {/* Navigation */}
-          <div className="flex-grow flex justify-end">
-            {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center justify-center h-12 border border-gray-300 dark:border-gray-600 rounded-full px-3 lg:px-10 bg-white dark:bg-gray-800 shadow-sm dark:shadow-gray-700">
-              <ul className="flex flex-wrap items-center gap-3 sm:gap-4 lg:gap-6 text-black dark:text-white text-sm lg:text-base">
-                {navItems.map((item) => (
-                  <li key={item.name}>
-                    <a
-                      href={`#${item.name.replace(/\s+/g, "").toLowerCase()}`}
-                      className={`px-3 sm:px-2 py-2 rounded-full text-black dark:text-white font-medium
-              ${colorMap[item.color]} hover:text-white hover:font-bold
-              transform hover:scale-110 transition-all duration-300 ease-in-out`}
-                    >
-                      {item.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-
-          {/* Mobile Hamburger */}
-          <div className="md:hidden ml-auto pr-4 flex justify-end items-center">
-            <button
-              className="flex flex-col justify-between w-6 h-5 focus:outline-none"
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
-              <span className="block h-0.5 w-full bg-black dark:bg-white rounded"></span>
-              <span className="block h-0.5 w-full bg-black dark:bg-white rounded"></span>
-              <span className="block h-0.5 w-full bg-black dark:bg-white rounded"></span>
-            </button>
-          </div>
-
-          {/* Mobile Dropdown Menu */}
-          <div
-            ref={mobileMenuRef}
-            className={`absolute top-16 right-4 w-1/2 bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-700 rounded-xl md:hidden z-20
-    transform transition-all duration-300 ease-in-out border border-gray-200 dark:border-gray-600
-    ${menuOpen ? "pointer-events-auto" : "pointer-events-none"}`}
-            style={{ display: menuOpen ? "block" : "none" }}
-          >
-            <ul className="flex flex-col space-y-2 p-4 text-center text-black dark:text-white">
-              {navItems.map((item, index) => (
-                <li
-                  key={item.name}
-                  ref={(el) => {
-                    if (el && menuOpen) {
-                      gsap.fromTo(
-                        el,
-                        { opacity: 0, y: -20 },
-                        {
-                          opacity: 1,
-                          y: 0,
-                          delay: index * 0.05,
-                          duration: 0.4,
-                          ease: "power3.out",
-                        }
-                      );
-                    }
-                  }}
-                >
-                  <a
-                    href={`#${item.name.replace(/\s+/g, "").toLowerCase()}`}
-                    className={`block py-2 rounded-full text-black dark:text-white ${
-                      colorMap[item.color]
-                    } hover:text-white transition-all duration-200`}
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    {item.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </header>
-      </main>
+    <main className="w-full relative pt-10">
 
       {/* Grid Background */}
-      <div
+     <div
         ref={gridRef}
-        className="absolute left-0 w-full h-[23px] sm:h-[300px] md:h-[385px] mt-20 bg-white dark:bg-gray-900"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, #222 1px, transparent 1px), linear-gradient(to bottom, #222 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-          opacity: 0.7,
-        }}
+        className="absolute left-0 top-0 w-full h-[23px] sm:h-[300px] md:h-[410px] z-[-10] pointer-events-none
+                  bg-white dark:bg-black
+                  [background-image:linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)]
+                  dark:[background-image:linear-gradient(to_right,#555_1px,transparent_1px),linear-gradient(to_bottom,#555_1px,transparent_1px)]"
+        style={{ backgroundSize: "40px 40px", opacity: 0.7 }}
       />
-      <div
-        className="absolute left-0 w-full h-[23px] sm:h-[300px] md:h-[385px] mt-20 hidden dark:block"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, #666 1px, transparent 1px), linear-gradient(to bottom, #666 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-          backgroundColor: "#111827",
-          opacity: 0.7,
-        }}
-      />
+
+   
 
       {/* Dino Game Section */}
       <section className="flex mt-1 sm:mt-1 lg:mt-1 ">
-        <div className="relative w-full h-60 sm:h-80 md:h-96 overflow-hidden mt-20">
+        <div className="relative w-full h-60 sm:h-80 md:h-96 overflow-hidden">
           {/* Ground */}
           <div className="absolute bottom-3 w-full border-t-2 border-gray-500 dark:border-gray-400"></div>
 
           {/* Center Logo */}
+          <div className="absolute lg:w-full lg:h-full flex justify-center items-center bottom-0 ">
           <div className="absolute -bottom-9 left-2/5 transform -translate-x-1/2 -translate-y-1/4 z-10">
-            <div className="bg-blue-500 dark:bg-blue-600 w-180 h-20 rounded-4xl justify-end ml-40">
-              <div className=" bg-gradient-to-r from-blue-200 to-white dark:from-blue-300 dark:to-gray-800 w-85 h-20 rounded-4xl flex justify-left align-left">
+            <div className="bg-blue-500 dark:bg-blue-600 w-180 h-20 md-w-100 md-h-15 rounded-4xl justify-end ml-40">
+              <div className=" bg-gradient-to-r from-blue-200 to-white dark:from-blue-300 dark:to-gray-800 w-85 h-20 md-w-25 md-h-15  rounded-4xl flex justify-left align-left">
                 <h1 className="text-5xl font-light bg-clip-text text-gray-800 dark:text-white mt-3 ml-10 ">
                   Google
                 </h1>
               </div>
             </div>
             <div className="flex flex-row">
-              <div className="bg-yellow-500 dark:bg-yellow-600 w-180 h-20 rounded-4xl flex justify-end">
-                <div className="bg-gradient-to-l from-yellow-300 to-white dark:from-yellow-300 dark:to-gray-800 w-95 h-20 rounded-4xl flex justify-left align-left ">
+              <div className="bg-yellow-500 dark:bg-yellow-600 w-180 h-20 md-w-100 md-h-15  rounded-4xl flex justify-end">
+                <div className="bg-gradient-to-l from-yellow-300 to-white dark:from-yellow-300 dark:to-gray-800 w-95 h-20 md-w-70 md-h-15 rounded-4xl flex justify-left align-left ">
                   <h1 className="text-5xl font-light bg-clip-text text-gray-800 dark:text-white mt-3 ml-5 ">
                     Developer
                   </h1>
                 </div>
               </div>
             </div>
-            <div className="bg-green-600 dark:bg-green-700 w-180 h-20 rounded-4xl ml-40 flex justify-end ">
-              <div className=" bg-gradient-to-l from-green-200 to-white dark:from-green-300 dark:to-gray-800 w-65 h-20 rounded-4xl flex justify-left align-left">
+            <div className="bg-green-600 dark:bg-green-700 w-180 h-20 md-w-100 md-h-15 rounded-4xl ml-40 flex justify-end ">
+              <div className=" bg-gradient-to-l from-green-200 to-white dark:from-green-300 dark:to-gray-800 w-65 h-20 md-w-30 md-h-15  rounded-4xl flex justify-left align-left">
                 <h1 className="text-5xl font-light bg-clip-text text-gray-800 dark:text-white mt-3 ml-5">
                   Groups
                 </h1>
               </div>
             </div>
+          </div>
           </div>
 
           {/* Dino */}
@@ -346,7 +230,7 @@ export default function HomeScreen() {
             className="absolute bottom-2 left-6 sm:left-10 w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16"
           >
             <Image
-              src="/assets/trex.png"
+              src="/assets/trex_t.png"
               alt="Dino"
               width={80}
               height={80}
@@ -359,35 +243,71 @@ export default function HomeScreen() {
         </div>
       </section>
 
-      <div className="flex ml-20 py-5 sm:px-5 md:px-5">
-        <div className="relative w-120 h-50 border-2 border-gray-400 dark:border-gray-500 rounded-3xl -z-1 rounded-br-none border-r-transparent">
+      {/*start here  */}
+      <div className="w-full h-full flex md:flex-col lg:flex-row sm:flex-col justify-between ">
+      <div className="text-white text-lg pl-20 pt-20" > 
+      <div className=" relative w-120 h-50 border-2 border-gray-400 dark:bg-black rounded-3xl  border-b-transparent rounded-br-none border-r-transparent z-10">
           <h2 className="text-2xl sm:text-2xl md:text-2xl lg:text-3xl font-semibold ml-5 mt-3 text-gray-900 dark:text-white">
             Connect. Learn. Build.
           </h2>
-          <p className="text-lg sm:text-2xl md:text-2xl lg:text-2xl leading-relaxed break-words mt-5 ml-5 w-150 text-gray-800 dark:text-gray-200">
+          <p className=" text-lg sm:text-2xl md:text-2xl lg:text-2xl  leading-relaxed break-words mt-5 ml-5 w-150 text-gray-800 dark:text-gray-200 z-100">
             At GDG NMIT – explore Google <br /> technologies, exchange
             expertise, and transform ideas into solutions. Through workshops,
             webinars, and
           </p>
 
-          <div className="absolute left-29 top-19 w-71 h-31 rounded-xl bg-white dark:bg-gray-800 -z-10">
-            <div className="absolute w-131 h-50 border-2 border-t-transparent bg-white dark:bg-gray-800 -z-5 rounded-3xl border-gray-400 dark:border-gray-500 border-l-transparent">
+          <div className="absolute left-29 top-19 w-81 h-31 rounded-xl     ">
+            <div className="absolute w-131 h-50  border-2 border-t-transparent  -z-20 border-gray-400 dark:bg-black  rounded-3xl border-l-transparent">
               {/* Concave top-right */}
-              <div className="absolute -top-19 right-1 w-41.5 h-21 border-2 bg-white dark:bg-gray-800 rounded-xl border-t-transparent border-gray-400 dark:border-gray-500 border-r-transparent rounded-tl-none rounded-br-none"></div>
+              <div className="absolute -top-19 right-1 w-41.5 h-21 border-2 bg-white border-gray-400 dark:bg-black rounded-xl border-t-transparent border-r-transparent rounded-tl-none rounded-br-none"></div>
               {/* Concave bottom-left */}
-              <div className="absolute bottom-1 -left-28.5 w-30.5 h-20 border-2 bg-white dark:bg-gray-800 rounded-xl border-b-transparent border-gray-400 dark:border-gray-500 border-l-transparent rounded-br-none rounded-tl-none z-10"></div>
+              <div className="absolute flex justify-center  items-center bottom-1 -left-28.5 w-30.5 h-20 border-2 border-gray-400 dark:bg-black rounded-xl border-b-transparent  border-l-transparent rounded-br-none rounded-tl-none z-10">
+                 <div className="flex justify-center mr-2 space-x-2">
+                            {[
+                              
+                              {
+                                Icon: FaInstagram,
+                                color: "hover:text-pink-500 dark:hover:text-pink-400",
+                              },
+                              {
+                                Icon: FaLinkedin,
+                                color: "hover:text-blue-700 dark:hover:text-blue-600",
+                              },
+                              {
+                                Icon: FaFacebookSquare,
+                                color: "hover:text-blue-500 ",
+                              },
+        
+                            ].map(({ Icon, color }, i) => (
+                              <div
+                                key={i}
+                                className={` text-gray-700 dark:text-gray-300 rounded-lg shadow-md dark:shadow-gray-800 hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300  ${color}`}
+                              >
+                                <Icon size={30} />
+                              </div>
+                            ))}
+                                           </div>
+              </div>
 
               {/* Inner wrapper to fit text perfectly */}
-              <div className="absolute top-5 left-6 right-6 bottom-5 flex flex-col justify-start overflow-hidden z-20">
-                {/* Additional inner div for padding/margin */}
-                <p className="text-lg sm:text-2xl md:text-2xl lg:text-2xl mt-22 leading-relaxed break-words text-gray-800 dark:text-gray-200">
+              <div className="absolute top-5 left-6 right-6 bottom-5 flex flex-col justify-start overflow-hidden">
+                <p className="text-lg sm:text-2xl md:text-2xl lg:text-2xl mt-22 px-5 leading-relaxed break-words text-gray-800 dark:text-gray-200">
                   tech talks, we Dream, Dare and Do.
                 </p>
               </div>
             </div>
           </div>
         </div>
+
       </div>
+      <div className="text-white text-lg pr-20">
+      <Image src={"/assets/lego1.png"} 
+          alt="lego" width={300} height={300} 
+          className="w-40 h-40 sm:w-100 sm:h-100 md:w-100 md:h-100 lg:w-115 lg-p-20 lg:h-115 md:mt-10 md:ml-20 sm:ml-20 sm:mt-20"/>
+
+      </div>
+      </div>
+   
     </main>
   );
 }

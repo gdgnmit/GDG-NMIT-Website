@@ -15,8 +15,8 @@ export default function Home() {
       <Event/>
       <Projects/>
       <Aboutus/>
-      <Contact/>
-      <Footer/> */}
+      <Contact/> 
+      <Footer/>*/}
     </>
   );
 }
