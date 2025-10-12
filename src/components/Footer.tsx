@@ -10,7 +10,7 @@ import {
 
 const Footer: React.FC = () => {
   return (
-    <footer className="relative overflow-hidden text-gray-800 mt-20 ">
+    <footer className="relative overflow-hidden text-gray-800 dark:text-gray-200 mt-20 bg-white dark:bg-gray-900">
       {/* Background gradient blobs */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-[-50px] left-[10%] w-64 h-64 bg-gradient-to-br from-blue-400 to-green-300 opacity-30 rounded-full blur-3xl animate-float-slow"></div>
@@ -47,7 +47,7 @@ const Footer: React.FC = () => {
         <div className="group">
           <div className="flex items-center space-x-2 mb-3 ">
             <Image
-              src="/google_logo.png"
+              src="/assets/google_logo.png"
               alt="GDG Logo"
               width={48}
               height={48}
@@ -60,24 +60,24 @@ const Footer: React.FC = () => {
               <span className="text-green-600">Community</span>
             </h2>
           </div>
-          <p className="text-sm text-gray-600 leading-relaxed">
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
             Empowering developers through collaboration, learning, and
-            innovation. Let’s build a better tech future — together.
+            innovation. Let&apos;s build a better tech future — together.
           </p>
         </div>
 
         {/* Navigation */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 relative inline-block">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 relative inline-block">
             Explore
-            <span className="absolute left-0 -bottom-1 w-full h-[2px] bg-gradient-to-r from-blue-500 via-red-500 via-yellow-400 to-green-500 rounded-full"></span>
+            <span className="absolute left-0 -bottom-1 w-full h-[2px] bg-gradient-to-r from-blue-500 to-green-500 rounded-full"></span>
           </h3>
           <ul className="space-y-2 text-sm">
             {["About", "Events", "Team", "Projects", "Contact"].map((item) => (
               <li key={item}>
                 <a
                   href={"#" + item.toLowerCase()}
-                  className="inline-block transform transition-all duration-200 hover:translate-x-1 hover:text-blue-600"
+                  className="inline-block transform transition-all duration-200 hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400 text-gray-700 dark:text-gray-300"
                 >
                   {item}
                 </a>
@@ -88,17 +88,21 @@ const Footer: React.FC = () => {
 
         {/* Address */}
         <div className="transition-transform duration-300 hover:translate-x-1">
-          <h3 className="text-lg font-semibold mb-3 text-gray-900">Address</h3>
-          <p className="text-sm text-gray-600">
-            Google Developer Groups<br />
-            NITTE<br />
+          <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
+            Address
+          </h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Google Developer Groups
+            <br />
+            NITTE
+            <br />
             Bengaluru, India
           </p>
-          <div className="flex items-center mt-3 space-x-2 text-sm text-gray-600">
-            <FaEnvelope className="text-blue-600" />
+          <div className="flex items-center mt-3 space-x-2 text-sm text-gray-600 dark:text-gray-400">
+            <FaEnvelope className="text-blue-600 dark:text-blue-400" />
             <a
               href="mailto:contact@gdgcommunity.dev"
-              className="hover:text-blue-600 transition-colors"
+              className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               MAIL
             </a>
@@ -107,18 +111,32 @@ const Footer: React.FC = () => {
 
         {/* Social Links */}
         <div className="text-center md:text-right mr-20">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Connect</h3>
-          
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            Connect
+          </h3>
+
           <div className="flex justify-center md:justify-end mt-4 space-x-5">
             {[
-              { Icon: FaTwitter, color: "hover:text-blue-500" },
-              { Icon: FaInstagram, color: "hover:text-pink-500" },
-              { Icon: FaLinkedin, color: "hover:text-blue-700" },
-              { Icon: FaGithub, color: "hover:text-gray-900" },
+              {
+                Icon: FaTwitter,
+                color: "hover:text-blue-500 dark:hover:text-blue-400",
+              },
+              {
+                Icon: FaInstagram,
+                color: "hover:text-pink-500 dark:hover:text-pink-400",
+              },
+              {
+                Icon: FaLinkedin,
+                color: "hover:text-blue-700 dark:hover:text-blue-600",
+              },
+              {
+                Icon: FaGithub,
+                color: "hover:text-gray-900 dark:hover:text-gray-300",
+              },
             ].map(({ Icon, color }, i) => (
               <div
                 key={i}
-                className={`p-2 bg-white rounded-full shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 ${color}`}
+                className={`p-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full shadow-md dark:shadow-gray-800 hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 ${color}`}
               >
                 <Icon size={20} />
               </div>

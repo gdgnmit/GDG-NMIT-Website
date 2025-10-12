@@ -9,14 +9,14 @@ import Footer from "@/components/Footer";
 export default function Home() {
   return (
     <>
-      <HomePage/>
-      <Domain/>
+      <HomePage />
+      {/* <Domain/>
       <Team/>
       <Event/>
       <Projects/>
       <Aboutus/>
       <Contact/>
-      <Footer/>
+      <Footer/> */}
     </>
   );
 }
