@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@fontsource-variable/google-sans-code": "^5.2.3",
     "axios": "^1.12.2",
     "cloudinary": "^2.7.0",
     "formidable": "^3.5.4",

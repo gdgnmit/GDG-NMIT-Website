@@ -8,11 +8,38 @@
   --foreground: #171717;
 }
 
+@font-face {
+  font-family:  "Google Sans";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("/assets/GoogleSansDisplay-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family:  "Google Sans";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url("/assets/GoogleSansDisplay-Bold.ttf") format("truetype");
+}
+
 @theme inline {
+  /* google color pallete */
+  --color-g-gray: #5f6368;
+  --color-g-white: #f1f3f4;
+  --color-g-blue: #4285f4;
+  --color-g-red: #ea4335;
+  --color-g-yellow: #f9ab00;
+  --color-g-green: #34a853;
+  --color-g-blue-secondary: #8ab4f8;
+  --color-g-red-secondary: #f28b82;
+  --color-g-yellow-secondary: #fde293;
+  --color-g-green-secondary: #81c995;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Google Sans", Arial, Helvetica, sans-serif;
+  --font-mono: "Google Sans Code Variable", monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -50,5 +77,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
