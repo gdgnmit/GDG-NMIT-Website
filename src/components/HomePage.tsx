@@ -1,14 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
-import {
- 
-  FaInstagram,
-  FaLinkedin,
-  FaFacebookSquare,
-} from "react-icons/fa";
+import { FaInstagram, FaLinkedin, FaFacebookSquare } from "react-icons/fa";
+
+// Constants
+const JUMP_HEIGHT = -80;
+const JUMP_DURATION = 0.5;
+const OBSTACLE_MIN_DELAY = 3000;
+const OBSTACLE_MAX_DELAY = 5000;
+const CLOUD_SPAWN_CHANCE = 0.2;
+const BIRD_SPAWN_CHANCE = 0.4;
+const BIRD_SPACING = 30;
+const GRID_ANIMATION_DURATION = 8;
 
 export default function HomeScreen() {
   const dinoRef = useRef<HTMLDivElement>(null);
@@ -16,42 +21,11 @@ export default function HomeScreen() {
   const isJumping = useRef(false);
   const activeBirds = useRef<number[]>([]);
   const gridRef = useRef<HTMLDivElement>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
-
-
   useEffect(() => {
-    if (!mobileMenuRef.current) return;
-
-    if (menuOpen) {
-      // Animate in
-      gsap.fromTo(
-        mobileMenuRef.current,
-        { opacity: 0, scale: 0.8, y: -20 },
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          duration: 0.5,
-          ease: "power3.out",
-        }
-      );
-    } else {
-      // Animate out
-      gsap.to(mobileMenuRef.current, {
-        opacity: 0,
-        scale: 0.8,
-        y: -20,
-        duration: 0.4,
-        ease: "power3.in",
-      });
-    }
-  }, [menuOpen]);
-  useEffect(() => {
-    // Subtle floating animation
+    // Subtle floating animation for grid background
     gsap.to(gridRef.current, {
       backgroundPosition: "200px 200px",
-      duration: 8,
+      duration: GRID_ANIMATION_DURATION,
       repeat: -1,
       yoyo: true,
       ease: "power1.inOut",
@@ -68,11 +42,13 @@ export default function HomeScreen() {
 
     const dinoJump = () => {
       if (isJumping.current || !dinoRef.current) return;
+
       isJumping.current = true;
       idleTween.pause();
+
       gsap.to(dinoRef.current, {
-        y: -80,
-        duration: 0.5,
+        y: JUMP_HEIGHT,
+        duration: JUMP_DURATION,
         ease: "power1.out",
         yoyo: true,
         repeat: 1,
@@ -92,19 +68,19 @@ export default function HomeScreen() {
       let imgSrc = "";
       let width = 40;
       let height = 64;
-      let bottomPos = 10;
+      let bottomPos = 0;
       let isBird = false;
       let isCloud = false;
 
-      if (rand < 0.2) {
+      if (rand < CLOUD_SPAWN_CHANCE) {
         // Cloud (20%)
         imgSrc = "/assets/cloud.png";
-        width = 100 + Math.random() * 50; // random width for variation
+        width = 100 + Math.random() * 50;
         height = 60;
-        bottomPos = 200 + Math.random() * 50; // high up
+        bottomPos = 200 + Math.random() * 50;
         isCloud = true;
-      } else if (rand < 0.4) {
-        // Bird (30%)
+      } else if (rand < BIRD_SPAWN_CHANCE) {
+        // Bird (20%)
         imgSrc = "/assets/bird.png";
         width = 64;
         height = 64;
@@ -115,13 +91,14 @@ export default function HomeScreen() {
           bottomPos = 60 + Math.random() * 30;
           tries++;
         } while (
-          activeBirds.current.some((b) => Math.abs(b - bottomPos) < 30) &&
+          activeBirds.current.some(
+            (b) => Math.abs(b - bottomPos) < BIRD_SPACING
+          ) &&
           tries < 10
         );
         activeBirds.current.push(bottomPos);
       } else {
-        // Cactus / obstacle (50%)
-        const isDarkMode = document.documentElement.classList.contains("dark");
+        // Cactus/obstacle (60%)
         imgSrc = "/assets/vector_light.png";
         width = 40;
         height = 64;
@@ -142,7 +119,7 @@ export default function HomeScreen() {
       const duration = isCloud ? 12 + Math.random() * 3 : 5;
 
       gsap.to(obstacle, {
-        left: -200, // move off screen
+        left: -200,
         duration: duration,
         ease: "linear",
         onUpdate: () => {
@@ -168,66 +145,52 @@ export default function HomeScreen() {
         },
       });
 
-      setTimeout(spawnObstacle, Math.random() * 2000 + 3000);
+      // Schedule next obstacle spawn
+      setTimeout(
+        spawnObstacle,
+        Math.random() * (OBSTACLE_MAX_DELAY - OBSTACLE_MIN_DELAY) +
+          OBSTACLE_MIN_DELAY
+      );
     };
 
     spawnObstacle();
   }, []);
-  
+
   return (
-    <main className="w-full relative pt-10">
+    <main className="w-full relative">
+      {/* Dino Game Section - Self-contained with its own background */}
+      <section className="relative w-full overflow-hidden">
+        {/* Grid Background - contained within section */}
+        <div
+          ref={gridRef}
+          className="absolute left-0 top-0 w-full h-full z-0 pointer-events-none
+                    bg-white dark:bg-black
+                    [background-image:linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)]
+                    dark:[background-image:linear-gradient(to_right,#555_1px,transparent_1px),linear-gradient(to_bottom,#555_1px,transparent_1px)]"
+          style={{ backgroundSize: "40px 40px", opacity: 0.7 }}
+        />
 
-      {/* Grid Background */}
-     <div
-        ref={gridRef}
-        className="absolute left-0 top-0 w-full h-[23px] sm:h-[300px] md:h-[410px] z-[-10] pointer-events-none
-                  bg-white dark:bg-black
-                  [background-image:linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)]
-                  dark:[background-image:linear-gradient(to_right,#555_1px,transparent_1px),linear-gradient(to_bottom,#555_1px,transparent_1px)]"
-        style={{ backgroundSize: "40px 40px", opacity: 0.7 }}
-      />
-
-   
-
-      {/* Dino Game Section */}
-      <section className="flex mt-1 sm:mt-1 lg:mt-1 ">
-        <div className="relative w-full h-60 sm:h-80 md:h-96 overflow-hidden">
-          {/* Ground */}
-          <div className="absolute bottom-3 w-full border-t-2 border-gray-500 dark:border-gray-400"></div>
-
-          {/* Center Logo */}
-          <div className="absolute lg:w-full lg:h-full flex justify-center items-center bottom-0 ">
-          <div className="absolute -bottom-9 left-2/5 transform -translate-x-1/2 -translate-y-1/4 z-10">
-            <div className="bg-blue-500 dark:bg-blue-600 w-180 h-20 md-w-100 md-h-15 rounded-4xl justify-end ml-40">
-              <div className=" bg-gradient-to-r from-blue-200 to-white dark:from-blue-300 dark:to-gray-800 w-85 h-20 md-w-25 md-h-15  rounded-4xl flex justify-left align-left">
-                <h1 className="text-5xl font-light bg-clip-text text-gray-800 dark:text-white mt-3 ml-10 ">
-                  Google
-                </h1>
-              </div>
+        {/* Game Container - Responsive heights for all screen sizes */}
+        <div className="relative w-full h-80 sm:h-96 md:h-[26rem] lg:h-[28rem]">
+          {/* Hero Image - Centered independently with higher z-index */}
+          <div className="absolute inset-0 flex items-center justify-around z-30 pointer-events-none">
+            <div className="max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl px-4 pt-16">
+              <Image
+                src="/assets/hero_image.svg"
+                alt="GDG Hero"
+                width={416}
+                height={307}
+                priority
+                className="w-full h-auto"
+              />
             </div>
-            <div className="flex flex-row">
-              <div className="bg-yellow-500 dark:bg-yellow-600 w-180 h-20 md-w-100 md-h-15  rounded-4xl flex justify-end">
-                <div className="bg-gradient-to-l from-yellow-300 to-white dark:from-yellow-300 dark:to-gray-800 w-95 h-20 md-w-70 md-h-15 rounded-4xl flex justify-left align-left ">
-                  <h1 className="text-5xl font-light bg-clip-text text-gray-800 dark:text-white mt-3 ml-5 ">
-                    Developer
-                  </h1>
-                </div>
-              </div>
-            </div>
-            <div className="bg-green-600 dark:bg-green-700 w-180 h-20 md-w-100 md-h-15 rounded-4xl ml-40 flex justify-end ">
-              <div className=" bg-gradient-to-l from-green-200 to-white dark:from-green-300 dark:to-gray-800 w-65 h-20 md-w-30 md-h-15  rounded-4xl flex justify-left align-left">
-                <h1 className="text-5xl font-light bg-clip-text text-gray-800 dark:text-white mt-3 ml-5">
-                  Groups
-                </h1>
-              </div>
-            </div>
-          </div>
+            <div></div>
           </div>
 
-          {/* Dino */}
+          {/* Dino - Position at the very bottom to align with content section border */}
           <div
             ref={dinoRef}
-            className="absolute bottom-2 left-6 sm:left-10 w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16"
+            className="absolute bottom-0 left-4 sm:left-6 md:left-10 w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 z-10"
           >
             <Image
               src="/assets/trex_t.png"
@@ -243,71 +206,76 @@ export default function HomeScreen() {
         </div>
       </section>
 
-      {/*start here  */}
-      <div className="w-full h-full flex md:flex-col lg:flex-row sm:flex-col justify-between ">
-      <div className="text-white text-lg pl-20 pt-20" > 
-      <div className=" relative w-120 h-50 border-2 border-gray-400 dark:bg-black rounded-3xl  border-b-transparent rounded-br-none border-r-transparent z-10">
-          <h2 className="text-2xl sm:text-2xl md:text-2xl lg:text-3xl font-semibold ml-5 mt-3 text-gray-900 dark:text-white">
-            Connect. Learn. Build.
-          </h2>
-          <p className=" text-lg sm:text-2xl md:text-2xl lg:text-2xl  leading-relaxed break-words mt-5 ml-5 w-150 text-gray-800 dark:text-gray-200 z-100">
-            At GDG NMIT – explore Google <br /> technologies, exchange
-            expertise, and transform ideas into solutions. Through workshops,
-            webinars, and
-          </p>
+      {/* Content Section - Border acts as ground line */}
+      <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent opacity-50"></div>
 
-          <div className="absolute left-29 top-19 w-81 h-31 rounded-xl     ">
-            <div className="absolute w-131 h-50  border-2 border-t-transparent  -z-20 border-gray-400 dark:bg-black  rounded-3xl border-l-transparent">
-              {/* Concave top-right */}
-              <div className="absolute -top-19 right-1 w-41.5 h-21 border-2 bg-white border-gray-400 dark:bg-black rounded-xl border-t-transparent border-r-transparent rounded-tl-none rounded-br-none"></div>
-              {/* Concave bottom-left */}
-              <div className="absolute flex justify-center  items-center bottom-1 -left-28.5 w-30.5 h-20 border-2 border-gray-400 dark:bg-black rounded-xl border-b-transparent  border-l-transparent rounded-br-none rounded-tl-none z-10">
-                 <div className="flex justify-center mr-2 space-x-2">
-                            {[
-                              
-                              {
-                                Icon: FaInstagram,
-                                color: "hover:text-pink-500 dark:hover:text-pink-400",
-                              },
-                              {
-                                Icon: FaLinkedin,
-                                color: "hover:text-blue-700 dark:hover:text-blue-600",
-                              },
-                              {
-                                Icon: FaFacebookSquare,
-                                color: "hover:text-blue-500 ",
-                              },
-        
-                            ].map(({ Icon, color }, i) => (
-                              <div
-                                key={i}
-                                className={` text-gray-700 dark:text-gray-300 rounded-lg shadow-md dark:shadow-gray-800 hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300  ${color}`}
-                              >
-                                <Icon size={30} />
-                              </div>
-                            ))}
-                                           </div>
-              </div>
+      {/* Content Section - Independent from game section */}
+      <div className="w-full flex flex-col lg:flex-row justify-around gap-20 items-center lg:items-center px-4 py-8 md:py-12">
+        {/* Text Content */}
+        <div>
+          <div className="relative mt-8 sm:mt-0 bg-no-repeat bg-contain hero-illustration w-full h-auto p-2 md:max-w-[480px]">
+            <h2 className="pt-1 sm:pt-3 pl-4 text-xl sm:text-3xl font-semibold text-gray-900 dark:text-white">
+              Connect. Learn. Build.
+            </h2>
 
-              {/* Inner wrapper to fit text perfectly */}
-              <div className="absolute top-5 left-6 right-6 bottom-5 flex flex-col justify-start overflow-hidden">
-                <p className="text-lg sm:text-2xl md:text-2xl lg:text-2xl mt-22 px-5 leading-relaxed break-words text-gray-800 dark:text-gray-200">
-                  tech talks, we Dream, Dare and Do.
-                </p>
+            <p className="mt-2.5 ml-3.5 text-lg sm:text-xl leading-relaxed break-words text-gray-800 dark:text-gray-200">
+              At GDG NMIT – explore Google technologies, exchange expertise, and
+              transform ideas into solutions. Through workshops, webinars, and
+              tech talks, we Dream, Dare and Do.
+            </p>
+
+            {/* Social Media Links */}
+            <div className="clear-both absolute bottom-1 sm:bottom-4 left-2">
+              <div
+                className="flex justify-start space-x-4"
+                role="group"
+                aria-label="Social media links"
+              >
+                {[
+                  {
+                    Icon: FaInstagram,
+                    color: "hover:text-pink-500 dark:hover:text-pink-400",
+                    label: "Instagram",
+                  },
+                  {
+                    Icon: FaLinkedin,
+                    color: "hover:text-blue-700 dark:hover:text-blue-600",
+                    label: "LinkedIn",
+                  },
+                  {
+                    Icon: FaFacebookSquare,
+                    color: "hover:text-blue-500",
+                    label: "Facebook",
+                  },
+                ].map(({ Icon, color, label }, i) => (
+                  <a
+                    key={i}
+                    href="#"
+                    aria-label={label}
+                    className="transform hover:-translate-y-0.5 transition-all duration-300"
+                  >
+                    <Icon
+                      size={30}
+                      className={`text-gray-600 dark:text-gray-400 ${color}`}
+                    />
+                  </a>
+                ))}
               </div>
             </div>
           </div>
         </div>
 
+        {/* Lego Image */}
+        <div className="w-full lg:w-auto flex justify-center lg:justify-end">
+          <Image
+            src="/assets/lego1.png"
+            alt="GDG Lego illustration"
+            width={300}
+            height={300}
+            className="w-full aspect-square p-4 sm:w-100 sm:h-100 md:w-100 md:h-100 md:mt-10 sm:mt-20"
+          />
+        </div>
       </div>
-      <div className="text-white text-lg pr-20">
-      <Image src={"/assets/lego1.png"} 
-          alt="lego" width={300} height={300} 
-          className="w-40 h-40 sm:w-100 sm:h-100 md:w-100 md:h-100 lg:w-115 lg-p-20 lg:h-115 md:mt-10 md:ml-20 sm:ml-20 sm:mt-20"/>
-
-      </div>
-      </div>
-   
     </main>
   );
 }

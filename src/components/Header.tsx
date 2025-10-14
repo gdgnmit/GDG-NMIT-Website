@@ -51,7 +51,7 @@ const Header: React.FC = () => {
   }, [menuOpen]);
 
   return (
-    <header className="fixed w-screen flex justify-between items-center p-3 px-4 sm:px-4 bg-white dark:bg-black shadow-md z-50 border-b border-g-gray">
+    <header className="fixed w-screen flex justify-between items-center p-3 px-4 sm:px-4 bg-white dark:bg-black z-50 border-b border-gray-200 dark:border-gray-800">
       <Link href="/" className="flex items-center flex-shrink-0">
         <Image
           src="/assets/gdg.svg"
@@ -112,10 +112,10 @@ const Header: React.FC = () => {
       <div
         ref={mobileMenuRef}
         className={`fixed top-0 right-0 h-full w-3/4 max-w-sm bg-white dark:bg-black shadow-2xl lg:hidden z-50
-    transform transition-transform duration-300 ease-in-out border-l border-g-gray
+    transform transition-transform duration-300 ease-in-out border-l border-gray-200 dark:border-gray-800
     ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
       >
-        <div className="flex justify-between items-center p-6 border-b border-g-gray">
+        <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-800">
           <span className="font-mono">./</span>
           <button
             onClick={() => setMenuOpen(false)}

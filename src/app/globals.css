@@ -9,7 +9,7 @@
 }
 
 @font-face {
-  font-family:  "Google Sans";
+  font-family: "Google Sans";
   font-style: normal;
   font-display: swap;
   font-weight: 400;
@@ -17,7 +17,7 @@
 }
 
 @font-face {
-  font-family:  "Google Sans";
+  font-family: "Google Sans";
   font-style: normal;
   font-display: swap;
   font-weight: 700;
@@ -42,28 +42,61 @@
   --font-mono: "Google Sans Code Variable", monospace;
 }
 
+@layer components {
+  .squircle {
+    corner-shape: squircle;
+  }
+
+  .hero-illustration {
+    aspect-ratio: 156 / 100;
+    background-image: url("data:image/svg+xml,%3Csvg%20width%3D%22587%22%20height%3D%22376%22%20viewBox%3D%220%200%20587%20376%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cpath%20d%3D%22M16%201H400.5C404.477%201%20408.292%202.58337%20411.105%205.40234C413.919%208.2216%20415.5%2012.0462%20415.5%2016.0342V44.0938C415.5%2048.6106%20417.291%2052.9431%20420.479%2056.1377C423.666%2059.3323%20427.991%2061.127%20432.5%2061.127H570.5C574.478%2061.127%20578.292%2062.7111%20581.105%2065.5303C583.919%2068.3495%20585.5%2072.1733%20585.5%2076.1611V359.966C585.5%20363.954%20583.919%20367.778%20581.105%20370.598C578.292%20373.417%20574.477%20375%20570.5%20375H236C232.023%20375%20228.208%20373.417%20225.395%20370.598C222.581%20367.778%20221%20363.954%20221%20359.966V331.906C221%20327.389%20219.209%20323.057%20216.021%20319.862C212.834%20316.668%20208.509%20314.873%20204%20314.873H16C12.0225%20314.873%208.20774%20313.289%205.39453%20310.47C2.58129%20307.651%201.00005%20303.827%201%20299.839V16.0342C1%2012.0462%202.58125%208.2216%205.39453%205.40234C8.20771%202.58336%2012.0226%201%2016%201Z%22%20stroke%3D%22%234285F4%22%20stroke-width%3D%222%22%2F%3E%0A%3C%2Fsvg%3E");
+  }
+
+  @media (min-width: 1024px) {
+    .hero-illustration {
+      aspect-ratio: 9 / 5;
+      background-image: url("data:image/svg+xml,%3Csvg%20width%3D%22587%22%20height%3D%22316%22%20viewBox%3D%220%200%20587%20316%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cpath%20d%3D%22M16%201H430.5C434.477%201%20438.292%202.58337%20441.105%205.40234C443.919%208.2216%20445.5%2012.0462%20445.5%2016.0342V44.0938C445.5%2048.6106%20447.291%2052.9431%20450.479%2056.1377C453.666%2059.3323%20457.991%2061.127%20462.5%2061.127H570.5C574.478%2061.127%20578.292%2062.7111%20581.105%2065.5303C583.919%2068.3495%20585.5%2072.1733%20585.5%2076.1611V299.966C585.5%20303.954%20583.919%20307.778%20581.105%20310.598C578.292%20313.417%20574.477%20315%20570.5%20315H186C182.023%20315%20178.208%20313.417%20175.395%20310.598C172.581%20307.778%20171%20303.954%20171%20299.966V271.906C171%20267.389%20169.209%20263.057%20166.021%20259.862C162.834%20256.668%20158.509%20254.873%20154%20254.873H16C12.0225%20254.873%208.20774%20253.289%205.39453%20250.47C2.5813%20247.651%201.00005%20243.827%201%20239.839V16.0342C1%2012.0462%202.58125%208.2216%205.39453%205.40234C8.20771%202.58336%2012.0226%201%2016%201Z%22%20stroke%3D%22%234285F4%22%20stroke-width%3D%222%22%2F%3E%0A%3C%2Fsvg%3E");
+    }
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
   @keyframes gradient-x {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
   }
-  
+
   .animate-gradient-x {
     background-size: 200% 200%;
     animation: gradient-x 5s ease infinite;
   }
-  
+
   @keyframes float-slow {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-15px);
+    }
   }
   @keyframes float-fast {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-25px); }
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-25px);
+    }
   }
   .animate-float-slow {
     animation: float-slow 6s ease-in-out infinite;
@@ -71,7 +104,6 @@
   .animate-float-fast {
     animation: float-fast 4s ease-in-out infinite;
   }
-  
 }
 
 body {
