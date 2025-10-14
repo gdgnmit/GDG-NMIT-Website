@@ -93,7 +93,7 @@ const Contact = () => {
                 </svg>
               </a>
 
-              <div className="absolute top-4 left-4 right-4 sm:right-auto sm:max-w-xs bg-white dark:bg-black p-4 rounded-xl border border-g-gray shadow-lg backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95">
+              <div className="absolute bottom-4 left-4 right-4 sm:right-auto sm:max-w-xs bg-white dark:bg-black p-4 rounded-xl border border-g-gray shadow-lg backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95">
                 <div className="flex items-start gap-3">
                   <div className="flex-shrink-0 w-10 h-10 rounded-full bg-g-blue flex items-center justify-center">
                     <svg

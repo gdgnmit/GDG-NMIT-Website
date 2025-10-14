@@ -218,7 +218,7 @@ export default function HomeScreen() {
               Connect. Learn. Build.
             </h2>
 
-            <p className="mt-2.5 ml-3.5 text-lg sm:text-xl leading-relaxed break-words text-gray-800 dark:text-gray-200">
+            <p className="mt-2.5 ml-3.5 text-lg sm:text-xl leading-6.5 sm:leading-relaxed break-words text-gray-800 dark:text-gray-200">
               At GDG NMIT – explore Google technologies, exchange expertise, and
               transform ideas into solutions. Through workshops, webinars, and
               tech talks, we Dream, Dare and Do.
@@ -255,8 +255,7 @@ export default function HomeScreen() {
                     className="transform hover:-translate-y-0.5 transition-all duration-300"
                   >
                     <Icon
-                      size={30}
-                      className={`text-gray-600 dark:text-gray-400 ${color}`}
+                      className={`size-7 sm:size-7.5 text-gray-600 dark:text-gray-400 ${color}`}
                     />
                   </a>
                 ))}

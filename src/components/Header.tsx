@@ -62,7 +62,7 @@ const Header: React.FC = () => {
         />
         <div className="flex flex-col align-left justify-center">
           <h1 className="ml-2 text-xl lg:text-2xl text-black dark:text-white leading-6">
-            <span className="block sm:hidden text-2xl font-bold">GDG NMIT</span>
+            <span className="block sm:hidden text-xl font-bold">GDG NMIT</span>
             <span className="hidden sm:block">Google Developer Groups</span>
           </h1>
           <h2 className="hidden sm:block ml-2 text-md lg:text-md text-g-blue leading-4">
