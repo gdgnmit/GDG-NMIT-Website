@@ -24,6 +24,9 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="relative bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800">
+      <div className="h-1 w-full" style={{
+        background: 'linear-gradient(to right, #4285F4 0%, #EA4335 33%, #FBBC04 66%, #34A853 100%)'
+      }}></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12">
           <div className="sm:col-span-2 lg:col-span-2">
