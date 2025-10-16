@@ -6,12 +6,15 @@ import Aboutus from "@/components/Aboutus";
 import Event from "@/components/Event";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import WhatWeDo from "@/components/WhatWeDo";
+
 export default function Home() {
   return (
     <>
       <HomePage />
-      <Domain/>
-      <Contact/> 
+      <WhatWeDo />
+      <Domain />
+      <Contact />
     </>
   );
 }

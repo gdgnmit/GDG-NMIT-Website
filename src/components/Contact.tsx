@@ -4,7 +4,7 @@ import React from "react";
 
 const Contact = () => {
   return (
-    <div className="min-h-screen bg-white dark:bg-black relative overflow-hidden">
+    <div className="min-h-screen bg-white dark:bg-g-almost-black relative overflow-hidden">
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col lg:flex-row w-full max-w-5xl gap-6 lg:gap-8">
           <div className="flex-1 flex flex-col justify-center w-full md:w-3/4 lg:w-full mx-auto">

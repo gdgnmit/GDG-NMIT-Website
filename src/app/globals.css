@@ -27,6 +27,8 @@
 @theme inline {
   /* google color pallete */
   --color-g-gray: #5f6368;
+  --color-g-quite-black: #1A1A1A;
+  --color-g-almost-black: #0a0a0a;
   --color-g-white: #f1f3f4;
   --color-g-blue: #4285f4;
   --color-g-red: #ea4335;

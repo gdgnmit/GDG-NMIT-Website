@@ -164,7 +164,7 @@ export default function HomeScreen() {
         <div
           ref={gridRef}
           className="absolute left-0 top-0 w-full h-full z-0 pointer-events-none
-                    bg-white dark:bg-black
+                    bg-white dark:bg-g-almost-black
                     [background-image:linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)]
                     dark:[background-image:linear-gradient(to_right,#555_1px,transparent_1px),linear-gradient(to_bottom,#555_1px,transparent_1px)]"
           style={{ backgroundSize: "40px 40px", opacity: 0.7 }}

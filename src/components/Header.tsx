@@ -51,7 +51,7 @@ const Header: React.FC = () => {
   }, [menuOpen]);
 
   return (
-    <header className="fixed w-screen flex justify-between items-center p-3 px-4 sm:px-4 bg-white dark:bg-black z-50 border-b border-gray-200 dark:border-gray-800">
+    <header className="fixed w-screen flex justify-between items-center p-3 px-4 sm:px-4 bg-white dark:bg-black z-50 border-b border-gray-200 dark:border-g-gray/70">
       <Link href="/" className="flex items-center flex-shrink-0">
         <Image
           src="/assets/gdg.svg"
@@ -72,7 +72,7 @@ const Header: React.FC = () => {
       </Link>
 
       <div className="flex-grow flex justify-end">
-        <nav className="hidden h-12 lg:flex items-center justify-center border border-g-gray rounded-full">
+        <nav className="hidden h-12 lg:flex items-center justify-center border border-g-gray/60 rounded-full">
           <ul className="flex px-2 flex-wrap items-center gap-2 text-black dark:text-white text-sm lg:text-base">
             {navItems.map((item) => (
               <li key={item.name}>
