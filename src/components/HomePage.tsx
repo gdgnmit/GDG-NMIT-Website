@@ -83,7 +83,7 @@ export default function HomeScreen() {
         // Bird (20%)
         imgSrc = "/assets/bird.png";
         width = 64;
-        height = 64;
+        height = 40;
         isBird = true;
 
         let tries = 0;
@@ -193,7 +193,7 @@ export default function HomeScreen() {
             className="absolute bottom-0 left-4 sm:left-6 md:left-10 w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 z-10"
           >
             <Image
-              src="/assets/trex_t.png"
+              src="/assets/dino.gif"
               alt="Dino"
               width={80}
               height={80}
@@ -210,7 +210,7 @@ export default function HomeScreen() {
       <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent opacity-50"></div>
 
       {/* Content Section - Independent from game section */}
-      <div className="w-full flex flex-col lg:flex-row justify-around gap-20 items-center lg:items-center px-4 py-8 md:py-12">
+      <div className="min-h-screen w-full flex flex-col-reverse lg:flex-row justify-around gap-20 items-center lg:items-center px-4 py-8 md:py-20">
         {/* Text Content */}
         <div>
           <div className="relative mt-8 sm:mt-0 bg-no-repeat bg-contain hero-illustration w-full h-auto p-2 md:max-w-[480px]">
@@ -265,13 +265,13 @@ export default function HomeScreen() {
         </div>
 
         {/* Lego Image */}
-        <div className="w-full lg:w-auto flex justify-center lg:justify-end">
+        <div className="w-full lg:w-auto flex justify-center lg:justify-end p-4">
           <Image
-            src="/assets/lego1.png"
-            alt="GDG Lego illustration"
-            width={300}
-            height={300}
-            className="w-full aspect-square p-4 sm:w-100 sm:h-100 md:w-100 md:h-100 md:mt-10 sm:mt-20"
+            src="/assets/gdg_community.gif"
+            alt="GDG Community illustration"
+            width={600}
+            height={450}
+            className="h-full w-auto md:min-h-[350px] md:mt-0 mt-20 filter drop-shadow-xl"
           />
         </div>
       </div>

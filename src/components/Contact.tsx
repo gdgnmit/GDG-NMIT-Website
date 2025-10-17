@@ -60,7 +60,7 @@ const Contact = () => {
           </div>
 
           <div className="flex-1 relative min-h-[350px] lg:min-h-[500px] w-full md:w-3/4 lg:w-full mx-auto">
-            <div className="relative w-full h-full rounded-2xl overflow-hidden border border-gray-200 dark:border-g-gray shadow-md dark:shadow-2xl">
+            <div className="relative w-full h-full rounded-2xl overflow-hidden border border-g-gray/30 dark:border-g-gray dark:shadow-2xl">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3885.521635379403!2d77.58508387484422!3d13.1294626872006!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae170d10bb559b%3A0x2bb3892a626cf9ba!2sNitte%20Meenakshi%20Institute%20of%20Technology!5e0!3m2!1sen!2sin!4v1760554935154!5m2!1sen!2sin"
                 width="100%"

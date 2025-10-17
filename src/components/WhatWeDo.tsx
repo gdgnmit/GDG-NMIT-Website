@@ -7,7 +7,7 @@ const WhatWeDo = () => {
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12 lg:py-16">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div className="order-2 lg:order-1">
-            <div className="w-full overflow-hidden rounded-2xl shadow-lg">
+            <div className="w-full overflow-hidden rounded-2xl">
               <Image
                 src="/assets/illustration_teamwork.jpg"
                 alt="What we do illustration"
@@ -25,7 +25,7 @@ const WhatWeDo = () => {
 
             <div className="mt-8 space-y-6">
               <p className="text-lg text-gray-700 dark:text-gray-300">
-                We're a bunch of tech enthusiasts who love to build, break, and
+                We&lsquo;re a bunch of tech enthusiasts who love to build, break, and
                 learn!
               </p>
               <p className="text-lg text-gray-700 dark:text-gray-300">
@@ -34,8 +34,8 @@ const WhatWeDo = () => {
                 alive.
               </p>
               <p className="text-lg text-gray-700 dark:text-gray-300">
-                Whether you're a beginner trying to code your first "Hello
-                World" or a pro building the next big thing, there's always
+                Whether you&apos;re a beginner trying to code your first &quot;Hello
+                World&quot; or a pro building the next big thing, there&apos;s always
                 something exciting happening here! We learn together, share
                 ideas, and grow into better developers.
               </p>
