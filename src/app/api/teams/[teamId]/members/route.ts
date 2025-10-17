@@ -30,35 +30,40 @@ export async function POST(
     try {
       formData = await request.formData();
     } catch (formDataError) {
-      console.error("Failed to parse formData:", formDataError);
       return NextResponse.json({ error: "Invalid form data" }, { status: 400 });
-    }
-
-    const keys = Array.from(formData.keys());
-
-    const allowedPhotoKey = "photo";
-    const invalidPhotoKey = keys.some(
-      (key) => key.startsWith("photo") && key !== allowedPhotoKey
-    );
-
-    if (invalidPhotoKey) {
-      return NextResponse.json(
-        {
-          error: `Invalid file upload key detected. Please use '${allowedPhotoKey}' as the key for uploading photo.`,
-        },
-        { status: 400 }
-      );
     }
 
     const name = formData.get("name") as string | null;
     const role = formData.get("role") as string | null;
+    const domain = formData.get("domain") as string | null;
+    const tier = formData.get("tier") as string | null;
     const photo = formData.get("photo") as File | null;
 
-    if (!name || !role) {
+    if (!name || !role || !domain || !tier) {
       return NextResponse.json(
-        { error: "Name and role are required" },
+        { error: "Name, role, domain, and tier are required" },
         { status: 400 }
       );
+    }
+
+    const validDomains = [
+      'club', 'tech', 'design', 'content and documentation', 
+      'pr & marketing', 'social media', 'operations'
+    ];
+    
+    if (!validDomains.includes(domain)) {
+      return NextResponse.json({ error: "Invalid domain" }, { status: 400 });
+    }
+
+    if (domain !== 'club') {
+      const validTiers = [
+        'faculty coordinator', 'lead', 'co-lead', 'student-advisor', 
+        'mentor', 'core', 'member', 'past', 'recruit'
+      ];
+      
+      if (!validTiers.includes(tier)) {
+        return NextResponse.json({ error: "Invalid tier for this domain" }, { status: 400 });
+      }
     }
 
     let photoUrl = "";
@@ -67,72 +72,45 @@ export async function POST(
         const arrayBuffer = await photo.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 
-        console.log("Uploading file to Cloudinary...");
         photoUrl = await new Promise<string>((resolve, reject) => {
           const stream = cloudinary.uploader.upload_stream(
             { folder: "member_photos" },
             (error, result) => {
-              if (error) {
-                console.error("Cloudinary upload error:", error);
-                reject(error);
-                return;
-              }
-              if (!result || !result.secure_url) {
-                reject(new Error("No valid upload response from Cloudinary"));
-                return;
-              }
-              console.log("Cloudinary upload successful:", result.secure_url);
-              resolve(result.secure_url);
+              if (error) reject(error);
+              else if (result?.secure_url) resolve(result.secure_url);
+              else reject(new Error("No URL from Cloudinary"));
             }
           );
           stream.end(buffer);
         });
       } catch (uploadError) {
-        console.error("Error during Cloudinary upload:", uploadError);
-        return NextResponse.json(
-          { error: "Photo upload failed. Try again later." },
-          { status: 500 }
-        );
+        return NextResponse.json({ error: "Photo upload failed" }, { status: 500 });
       }
-    } else {
-      console.log("No photo file uploaded");
     }
 
     const newMember = {
       name,
       role,
+      domain,
+      tier,
       photoUrl,
-      teamId: teamObjectId,
+      teamId: teamObjectId
     };
 
-    let result;
-    try {
-      result = await members.insertOne(newMember);
-      console.log("Inserted member with ID:", result.insertedId);
-    } catch (dbError) {
-      console.error("Failed to insert member in DB:", dbError);
-      return NextResponse.json(
-        { error: "Failed to save member data" },
-        { status: 500 }
-      );
-    }
-   
-    const updateResult = await teams.updateOne(
+    const result = await members.insertOne(newMember);
+    await teams.updateOne(
       { _id: teamObjectId },
       { $addToSet: { members: result.insertedId } }
     );
 
-    if (updateResult.modifiedCount === 0) {
-      console.warn("Member ID was already present in the team's members array.");
-    }
 
     return NextResponse.json({
-      message: "Member added successfully and team updated",
+      message: "Member added successfully",
       insertedId: result.insertedId,
-      photoUrl,
+      photoUrl
     });
   } catch (error) {
-    console.error("Unexpected error in POST /api/teams/[teamId]/members:", error);
+    console.error("Error in POST:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
