@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-const AboutUs = (): JSX.Element => {
+const AboutUs = () => {
   return (
     <main className="min-h-screen bg-white text-black font-[Geist_Mono] leading-relaxed">
       <section className="px-6 py-8 max-w-[1200px] mx-auto">
