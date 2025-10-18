@@ -193,7 +193,7 @@ export default function HomeScreen() {
             className="absolute bottom-0 left-4 sm:left-6 md:left-10 w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 z-10"
           >
             <Image
-              src="/assets/dino.gif"
+              src="/assets/trex_t.png"
               alt="Dino"
               width={80}
               height={80}
