@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface NavItem {
   name: string;
@@ -24,9 +25,17 @@ const colorMap: Record<string, string> = {
   yellow: "hover:bg-g-yellow",
 };
 
+const activeColorMap: Record<string, string> = {
+  blue: "bg-g-blue",
+  red: "bg-g-red",
+  green: "bg-g-green",
+  yellow: "bg-g-yellow",
+};
+
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement | null>(null);
+  const pathname = usePathname();
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -74,19 +83,26 @@ const Header: React.FC = () => {
       <div className="flex-grow flex justify-end">
         <nav className="hidden h-12 lg:flex items-center justify-center border border-g-gray/60 rounded-full">
           <ul className="flex px-2 flex-wrap items-center gap-2 text-black dark:text-white text-sm lg:text-base">
-            {navItems.map((item) => (
-              <li key={item.name}>
-                <a
-                  href={item.path}
-                  className={`px-3.5 py-1.5 rounded-full text-black dark:text-white
-              ${
-                colorMap[item.color]
-              } hover:text-white transition-all duration-300 ease-in-out`}
-                >
-                  {item.name}
-                </a>
-              </li>
-            ))}
+            {navItems.map((item) => {
+              const isActive = pathname === item.path;
+              return (
+                <li key={item.name}>
+                  <a
+                    href={item.path}
+                    className={`px-3.5 py-1.5 rounded-full transition-all duration-300 ease-in-out
+                ${
+                  isActive
+                    ? `${activeColorMap[item.color]} text-white`
+                    : `text-black dark:text-white ${
+                        colorMap[item.color]
+                      } hover:text-white`
+                }`}
+                  >
+                    {item.name}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </nav>
       </div>
