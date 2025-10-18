@@ -1,13 +1,16 @@
 @import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
+.bg-grid {
+  background-color: #fff;
+  background-image: linear-gradient(to right, #e5e5e5 1px, transparent 1px),
+    linear-gradient(to bottom, #e5e5e5 1px, transparent 1px);
+  background-size: 30px 30px;
+}
 @font-face {
   font-family: "Google Sans";
   font-style: normal;
@@ -27,7 +30,7 @@
 @theme inline {
   /* google color pallete */
   --color-g-gray: #5f6368;
-  --color-g-quite-black: #1A1A1A;
+  --color-g-quite-black: #1a1a1a;
   --color-g-almost-black: #0a0a0a;
   --color-g-white: #f1f3f4;
   --color-g-blue: #4285f4;
