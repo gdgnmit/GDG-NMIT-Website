@@ -41,7 +41,7 @@ const projects = [
     id: "5",
     color: "#FFD43B",
     imageSrc: "/team1.png",
-    title: "Project 1",
+    title: "Project 5",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
@@ -49,10 +49,11 @@ const projects = [
 
 export default function ProjectsPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+  const [isHoverDisabled, setIsHoverDisabled] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const nextSlide = () => {
-    // Allow sliding until we can see the last card (projects.length - 3 because we show 3 cards)
     if (currentIndex < projects.length - 3) setCurrentIndex(currentIndex + 1);
   };
 
@@ -69,6 +70,8 @@ export default function ProjectsPage() {
         {/* Left Arrow */}
         <button
           onClick={prevSlide}
+          onMouseEnter={() => setIsHoverDisabled(true)}
+          onMouseLeave={() => setIsHoverDisabled(false)}
           disabled={currentIndex === 0}
           className={`absolute left-0 z-20 bg-gray-200 hover:bg-gray-300 p-3 rounded-full shadow transition ${
             currentIndex === 0 ? "opacity-40 cursor-not-allowed" : ""
@@ -84,34 +87,37 @@ export default function ProjectsPage() {
             animate={{ x: `-${currentIndex * 350}px` }}
           >
             {projects.map((p, index) => {
-              // Calculate distance from the hovered/center index
-              const distance =
-                hoveredIndex !== null
-                  ? Math.abs(index - hoveredIndex)
-                  : Math.abs(index - currentIndex);
+              // Default: middle visible card is "active"
+              const middleVisibleIndex = currentIndex + 1;
 
-              // Define scale hierarchy (center biggest)
-              let scale = 1;
-              if (distance === 0) scale = 1.2;
-              else if (distance === 1) scale = 1.05;
-              else if (distance === 2) scale = 0.9;
-              else scale = 0.8;
+              // Determine which card should be large
+              const isFocused = focusedIndex === index;
+              const isCenter =
+                focusedIndex === null && index === middleVisibleIndex;
 
-              // Define z-index (so center card stays on top)
-              const zIndex = 10 - distance;
+              const scale = isFocused || isCenter ? 1.15 : 0.9;
+              const zIndex = isFocused || isCenter ? 10 : 5;
 
               return (
                 <motion.div
                   key={p.id}
                   animate={{ scale }}
-                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
                   style={{ zIndex }}
+                  onMouseEnter={() => {
+                    if (!isHoverDisabled) setFocusedIndex(index);
+                  }}
+                  onMouseLeave={() => {
+                    if (!isHoverDisabled) setFocusedIndex(null);
+                  }}
                 >
                   <ProjectCard
                     {...p}
-                    isActive={hoveredIndex === index}
-                    onHover={() => setHoveredIndex(index)}
-                    onLeave={() => setHoveredIndex(null)}
+                    isActive={focusedIndex === index}
+                    onHover={() => {
+                      if (!isHoverDisabled) setHoveredIndex(index);
+                    }}
+                    onLeave={() => setFocusedIndex(null)}
                   />
                 </motion.div>
               );
@@ -122,6 +128,8 @@ export default function ProjectsPage() {
         {/* Right Arrow */}
         <button
           onClick={nextSlide}
+          onMouseEnter={() => setIsHoverDisabled(true)}
+          onMouseLeave={() => setIsHoverDisabled(false)}
           disabled={currentIndex === projects.length - 3}
           className={`absolute right-0 z-20 bg-gray-200 hover:bg-gray-300 p-3 rounded-full shadow transition ${
             currentIndex === projects.length - 3
