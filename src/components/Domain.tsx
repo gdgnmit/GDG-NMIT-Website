@@ -1,28 +1,70 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Image from "next/image";
 
 const Domain = () => {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
   const domains = [
-    { src: "/assets/tech-domain.svg", alt: "Tech Domain", w: 440, h: 310.5 },
-    { src: "/assets/design-domain.svg", alt: "Design Domain", w: 344, h: 142 },
+    {
+      src: "/assets/tech-domain.svg",
+      alt: "Tech Domain",
+      w: 440,
+      h: 310.5,
+      name: "Technical",
+      description:
+        "Building cutting-edge solutions, organizing workshops, and driving technical excellence.",
+      color: "border-g-green",
+    },
+    {
+      src: "/assets/design-domain.svg",
+      alt: "Design Domain",
+      w: 344,
+      h: 142,
+      name: "Design",
+      description:
+        "Crafting beautiful experiences through UI/UX design, branding, and creative content.",
+      color: "border-g-blue",
+    },
     {
       src: "/assets/social-domain.svg",
       alt: "Social Media Domain",
       w: 500.5,
       h: 169,
+      name: "Social Media",
+      description:
+        "Engaging our community across platforms and amplifying our presence online.",
+      color: "border-g-yellow",
     },
     {
       src: "/assets/content-domain.svg",
       alt: "Content Domain",
       w: 484,
       h: 212,
+      name: "Content & Documentation",
+      description:
+        "Creating engaging stories, blogs, and documentation to inspire and educate the community.",
+      color: "border-g-red",
     },
-    { src: "/assets/pr-domain.svg", alt: "PR Domain", w: 444, h: 212 },
+    {
+      src: "/assets/pr-domain.svg",
+      alt: "PR Domain",
+      w: 444,
+      h: 212,
+      name: "PR & Marketing",
+      description:
+        "Building relationships, managing communications, and amplifying our message to the world.",
+      color: "border-g-green",
+    },
     {
       src: "/assets/operations-domain.svg",
       alt: "Operations Domain",
       w: 474,
       h: 142,
+      name: "Operations",
+      description:
+        "Orchestrating amazing events, hackathons, and meetups that bring the community together.",
+      color: "border-g-blue",
     },
   ];
 
@@ -37,22 +79,64 @@ const Domain = () => {
 
       <div className="pt-6 pb-12 px-8 sm:px-12 lg:px-16 xl:px-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 max-w-7xl mx-auto">
-          {domains.map((domain) => (
+          {domains.map((domain, index) => (
             <div
               key={domain.alt}
-              className="flex items-center justify-center h-[220px] group cursor-pointer"
+              className="relative flex items-center justify-center h-[220px] group cursor-pointer overflow-visible"
+              onClick={() =>
+                setActiveIndex(activeIndex === index ? null : index)
+              }
+              onMouseLeave={() => setActiveIndex(null)}
             >
-              <Image
-                src={domain.src}
-                alt={domain.alt}
-                width={domain.w}
-                height={domain.h}
-                className="object-contain transition-transform duration-300 ease-in-out group-hover:scale-105"
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: "100%",
-                }}
-              />
+              {/* Domain Image - visible by default, hidden on hover/tap */}
+              <div
+                className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ease-in-out ${
+                  activeIndex === index ? "opacity-0" : "group-hover:opacity-0"
+                }`}
+              >
+                <Image
+                  src={domain.src}
+                  alt={domain.alt}
+                  width={domain.w}
+                  height={domain.h}
+                  className="object-contain"
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "100%",
+                  }}
+                />
+              </div>
+
+              {/* Domain Description Card - hidden by default, visible on hover/tap */}
+              <div
+                className={`absolute inset-0 transition-opacity duration-300 ease-in-out flex items-center justify-center p-6 ${
+                  activeIndex === index
+                    ? "opacity-100"
+                    : "opacity-0 group-hover:opacity-100"
+                }`}
+              >
+                <div
+                  className="w-full h-full rounded-xl border-2 border-black bg-white p-6 flex flex-col justify-center"
+                  style={{
+                    boxShadow: `-12px 12px 0px ${
+                      domain.color === "border-g-blue"
+                        ? "#4285F4"
+                        : domain.color === "border-g-red"
+                        ? "#EA4335"
+                        : domain.color === "border-g-yellow"
+                        ? "#FBBC04"
+                        : "#34A853"
+                    }`,
+                  }}
+                >
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
+                    {domain.name}
+                  </h3>
+                  <p className="text-sm sm:text-base text-gray-700">
+                    {domain.description}
+                  </p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
