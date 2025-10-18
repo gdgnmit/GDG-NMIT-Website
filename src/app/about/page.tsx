@@ -1,6 +1,5 @@
-import AboutUs from "@/components/Aboutus";
-
+import About from "@/components/About";
 
 export default function TeamPage() {
-    return <AboutUs/>
+  return <About />;
 }

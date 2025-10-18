@@ -7,15 +7,15 @@ import Link from "next/link";
 
 interface NavItem {
   name: string;
+  path: string;
   color: string;
 }
 const navItems: NavItem[] = [
-  { name: "ABOUT US", color: "blue" },
-  { name: "DOMAIN", color: "red" },
-  { name: "EVENT", color: "green" },
-  { name: "PROJECTS", color: "yellow" },
-  { name: "TEAM", color: "blue" },
-  { name: "CONTACT US", color: "green" },
+  { name: "ABOUT US", path: "/about", color: "blue" },
+  { name: "EVENT", path: "/event", color: "green" },
+  { name: "PROJECTS", path: "/projects", color: "yellow" },
+  { name: "TEAM", path: "/team", color: "blue" },
+  { name: "CONTACT US", path: "/contact", color: "green" },
 ];
 const colorMap: Record<string, string> = {
   blue: "hover:bg-g-blue",
@@ -77,7 +77,7 @@ const Header: React.FC = () => {
             {navItems.map((item) => (
               <li key={item.name}>
                 <a
-                  href={`/${item.name.replace(/\s+/g, "").toLowerCase()}`}
+                  href={item.path}
                   className={`px-3.5 py-1.5 rounded-full text-black dark:text-white
               ${
                 colorMap[item.color]
@@ -157,7 +157,7 @@ const Header: React.FC = () => {
               }}
             >
               <a
-                href={`/${item.name.replace(/\s+/g, "").toLowerCase()}`}
+                href={item.path}
                 className={`block px-4 py-3 rounded-full text-center text-black dark:text-white border border-g-gray hover:border-transparent ${
                   colorMap[item.color]
                 } hover:text-white transition-all duration-300 ease-in-out cursor-pointer`}
