@@ -1,5 +1,11 @@
 "use client";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useMemo,
+} from "react";
 import { gsap } from "gsap";
 import axios from "axios";
 import EventCard, { CardConfig, EventData } from "./EventCard";
@@ -334,6 +340,16 @@ const Event: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Memoize event card data to avoid recalculating positions on every render
+  const eventCardsData = useMemo(() => {
+    return events.map((event, index) => ({
+      event,
+      config: BASE_CARD_CONFIGS[index % BASE_CARD_CONFIGS.length],
+      basePosition: BASE_POSITIONS[index % BASE_POSITIONS.length],
+      row: Math.floor(index / BASE_POSITIONS.length),
+    }));
+  }, [events]);
+
   // Loading state
   if (loading) {
     return (
@@ -344,12 +360,11 @@ const Event: React.FC = () => {
           aria-live="polite"
         >
           <svg
-            className="animate-spin"
+            className="animate-spin fill-neutral-400 dark:fill-neutral-500"
             xmlns="http://www.w3.org/2000/svg"
             height="56px"
             viewBox="0 -960 960 960"
             width="56px"
-            fill="#e3e3e3"
           >
             <path d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-155.5t86-127Q252-817 325-848.5T480-880q17 0 28.5 11.5T520-840q0 17-11.5 28.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160q133 0 226.5-93.5T800-480q0-17 11.5-28.5T840-520q17 0 28.5 11.5T880-480q0 82-31.5 155t-86 127.5q-54.5 54.5-127 86T480-80Z" />
           </svg>
@@ -399,26 +414,27 @@ const Event: React.FC = () => {
             </div>
 
             {/* Event Cards */}
-            {events.map((event, index) => {
-              const config =
-                BASE_CARD_CONFIGS[index % BASE_CARD_CONFIGS.length];
-              const basePosition =
-                BASE_POSITIONS[index % BASE_POSITIONS.length];
-              const row = Math.floor(index / BASE_POSITIONS.length);
-              const top = basePosition.top + getRowOffset(row);
+            {eventCardsData.map(
+              ({ event, config, basePosition, row }, index) => {
+                const top = basePosition.top + getRowOffset(row);
 
-              return (
-                <div
-                  key={event._id}
-                  ref={setCardRef(index)}
-                  className="absolute w-[320px] will-change-transform z-10"
-                  style={{ top: `${top}px`, left: basePosition.left }}
-                >
-                  {/* Card Container */}
-                  <EventCard event={event} config={config} variant="desktop" />
-                </div>
-              );
-            })}
+                return (
+                  <div
+                    key={event._id}
+                    ref={setCardRef(index)}
+                    className="absolute w-[320px] will-change-transform z-10"
+                    style={{ top: `${top}px`, left: basePosition.left }}
+                  >
+                    {/* Card Container */}
+                    <EventCard
+                      event={event}
+                      config={config}
+                      variant="desktop"
+                    />
+                  </div>
+                );
+              }
+            )}
           </div>
         </div>
 
