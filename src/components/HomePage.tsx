@@ -210,7 +210,7 @@ export default function HomeScreen() {
       <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent opacity-50"></div>
 
       {/* Content Section - Independent from game section */}
-      <div className="min-h-screen w-full flex flex-col-reverse lg:flex-row justify-around gap-20 items-center lg:items-center px-4 py-8 md:py-20">
+      <div className="min-h-screen w-full flex flex-col lg:flex-row justify-around gap-20 items-center lg:items-center px-4 py-8 md:py-20">
         {/* Text Content */}
         <div>
           <div className="relative mt-8 sm:mt-0 bg-no-repeat bg-contain hero-illustration w-full h-auto p-2 md:max-w-[480px]">
