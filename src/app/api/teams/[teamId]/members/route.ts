@@ -103,7 +103,6 @@ export async function POST(
       { $addToSet: { members: result.insertedId } }
     );
 
-
     return NextResponse.json({
       message: "Member added successfully",
       insertedId: result.insertedId,
