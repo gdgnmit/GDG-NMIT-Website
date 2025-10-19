@@ -82,7 +82,7 @@ const Domain = () => {
           {domains.map((domain, index) => (
             <div
               key={domain.alt}
-              className="relative flex items-center justify-center h-[220px] group cursor-pointer overflow-visible"
+              className="relative flex items-center justify-center h-[280px] sm:h-[300px] md:h-[280px] lg:h-[360px] group cursor-pointer overflow-visible"
               onClick={() =>
                 setActiveIndex(activeIndex === index ? null : index)
               }
@@ -109,14 +109,14 @@ const Domain = () => {
 
               {/* Domain Description Card - hidden by default, visible on hover/tap */}
               <div
-                className={`absolute inset-0 transition-opacity duration-300 ease-in-out flex items-center justify-center p-6 ${
+                className={`absolute inset-0 transition-opacity duration-300 ease-in-out flex items-center justify-center p-4 sm:p-6 md:p-5 lg:p-8 ${
                   activeIndex === index
                     ? "opacity-100"
                     : "opacity-0 group-hover:opacity-100"
                 }`}
               >
                 <div
-                  className="w-full h-full rounded-xl border-2 border-black bg-white p-6 flex flex-col justify-center"
+                  className="w-full h-full rounded-xl border-2 border-black bg-white p-6 sm:p-7 md:p-6 lg:p-8 flex flex-col justify-center"
                   style={{
                     boxShadow: `-12px 12px 0px ${
                       domain.color === "border-g-blue"
@@ -129,10 +129,10 @@ const Domain = () => {
                     }`,
                   }}
                 >
-                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
+                  <h3 className="text-2xl sm:text-3xl md:text-xl lg:text-3xl font-bold text-gray-900 mb-3 sm:mb-4 md:mb-3 lg:mb-4">
                     {domain.name}
                   </h3>
-                  <p className="text-sm sm:text-base text-gray-700">
+                  <p className="text-lg sm:text-xl md:text-base lg:text-xl text-gray-700 leading-relaxed sm:leading-normal md:leading-relaxed lg:leading-snug">
                     {domain.description}
                   </p>
                 </div>
