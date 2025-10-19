@@ -4,12 +4,31 @@ import Image from "next/image";
 import axios from "axios";
 
 interface Member {
-  id: string;
+  _id: string;
   name: string;
   role: string;
-  domain?: string;
-  tier?: string;
+  domain: string;
+  tier: string;
   photoUrl?: string;
+  teamId: string;
+  linkedinUrl?: string;
+  githubUrl?: string;
+  twitterUrl?: string;
+}
+
+interface DomainMembers {
+  [tier: string]: Member[] | { past?: Member[]; recruit?: Member[] };
+}
+
+interface TeamData {
+  team: {
+    _id: string;
+    year: string;
+    name: string;
+    members: Record<string, string[]>;
+  };
+  members: Record<string, DomainMembers>;
+  year: string;
 }
 
 const primaryColors = [
@@ -29,7 +48,6 @@ const secondaryColors = [
 // SVG path data with stroke for "inside stroke" effect
 const maskPaths = [
   "M20 2H380C389.941 2 398 10.0589 398 20V380C398 389.941 389.941 398 380 398H20C10.0589 398 2 389.941 2 380V20C2 10.0589 10.0589 2 20 2Z",
-  "M20 2H98.8086C108.75 2.00022 116.809 10.059 116.809 20V33.0615C116.809 45.2117 126.658 55.0615 138.809 55.0615H241.452C253.602 55.0615 263.452 45.2116 263.452 33.0615V20C263.452 10.2141 271.262 2.25209 280.988 2.00586L281.452 2H380C389.941 2 398 10.0589 398 20V380C398 389.941 389.941 398 380 398H344.768C334.826 398 326.768 389.941 326.768 380V366.938C326.767 354.788 316.918 344.939 304.768 344.938H257.616C245.466 344.939 235.616 354.788 235.616 366.938V380C235.616 389.941 227.557 398 217.616 398H20C10.0589 398 2 389.941 2 380V366.938C2.00015 356.997 10.059 348.938 20 348.938H30.8916C43.0419 348.938 52.8916 339.089 52.8916 326.938V190.975C52.8914 178.825 43.0417 168.975 30.8916 168.975H20C10.0589 168.975 2 160.916 2 150.975V20C2 10.0589 10.0589 2 20 2Z",
   "M20 2H380C389.941 2.00002 398 10.0589 398 20V380C398 389.941 389.941 398 380 398H150.512C140.571 398 132.512 389.941 132.512 380V333.924C132.512 321.774 122.662 311.924 110.512 311.924H20C10.0589 311.924 2 303.865 2 293.924V20C2.00001 10.0589 10.0589 2 20 2Z",
   "M20 2H380C389.941 2 398 10.0589 398 20V380C398 389.941 389.941 398 380 398H20C10.0589 398 2 389.941 2 380V290.524C2 280.583 10.0589 272.524 20 272.524H47.3115C59.4617 272.524 69.3115 262.675 69.3115 250.524V173.346C69.3115 161.195 59.4617 151.346 47.3115 151.346H20C10.059 151.346 2.00017 143.287 2 133.346V20C2.00001 10.0589 10.0589 2 20 2Z",
   "M20 2H380C389.941 2 398 10.0589 398 20V168.8C398 178.741 389.941 186.8 380 186.8H356.06C343.909 186.8 334.06 196.65 334.06 208.8V212.32C334.06 224.47 343.909 234.32 356.06 234.32H380C389.941 234.32 398 242.379 398 252.32V380C398 389.941 389.941 398 380 398H20C10.0589 398 2 389.941 2 380V20C2 10.0589 10.0589 2 20 2Z",
@@ -51,15 +69,27 @@ const masks = maskPaths.map((pathData) => {
 });
 
 const tierRank: Record<string, number> = {
-  lead: 5,
-  "co-lead": 4,
-  "student-advisor": 3,
-  core: 2,
-  member: 1,
+  "faculty advisor": 12,
+  lead: 11,
+  "co-lead": 10,
+  "student-advisor": 9,
+  mentor: 8,
+  core: 7,
+  // domain specific members
+  tech: 6,
+  "pr & marketing": 5,
+  operations: 4,
+  design: 3,
+  "social media": 2,
+  "content and documentation": 1,
+  // generic tiers
+  member: -2,
+  past: -3,
+  recruit: -4,
 };
 
 const Team = () => {
-  const [members, setMembers] = useState<Member[]>([]);
+  const [teamData, setTeamData] = useState<TeamData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -77,12 +107,7 @@ const Team = () => {
         }
 
         const latestTeam = teams[0];
-        const teamId = latestTeam._id;
-
-        const membersResponse = await axios.get(`/api/teams/${teamId}/members`);
-        const teamMembers = membersResponse.data?.members || [];
-
-        setMembers(teamMembers);
+        setTeamData(latestTeam);
         setError(null);
       } catch (err) {
         console.error("Failed to fetch team data:", err);
@@ -96,34 +121,49 @@ const Team = () => {
   }, []);
 
   const groupedMembers = useMemo(() => {
-    const grouped = members.reduce((acc, member) => {
-      const domain = member.domain || "Other";
-      if (!acc[domain]) {
-        acc[domain] = [];
-      }
-      acc[domain].push(member);
-      return acc;
-    }, {} as Record<string, Member[]>);
+    if (!teamData) return {};
 
-    Object.keys(grouped).forEach((domain) => {
+    const grouped: Record<string, Member[]> = {};
+
+    Object.entries(teamData.members).forEach(([domain, tiers]) => {
+      grouped[domain] = [];
+
+      Object.entries(tiers).forEach(([tier, members]) => {
+        if (
+          tier === "member" &&
+          typeof members === "object" &&
+          !Array.isArray(members)
+        ) {
+          if (members.past) {
+            grouped[domain].push(...members.past);
+          }
+          if (members.recruit) {
+            grouped[domain].push(...members.recruit);
+          }
+        } else if (Array.isArray(members)) {
+          grouped[domain].push(...members);
+        }
+      });
+
       grouped[domain].sort((a, b) => {
-        const rankA = tierRank[a.tier || "member"] || 0;
-        const rankB = tierRank[b.tier || "member"] || 0;
-        return rankB - rankA;
+        const rankA = tierRank[a.tier] || 0;
+        const rankB = tierRank[b.tier] || 0;
+        if (rankB !== rankA) return rankB - rankA;
+        return 0;
       });
     });
 
     return grouped;
-  }, [members]);
+  }, [teamData]);
 
   const domainNames: Record<string, string> = {
-    club: "Club Leadership",
-    technical: "Technical Team",
+    club: "Club Ops",
+    tech: "Technical Team",
     design: "Design Team",
-    content: "Content Team",
-    pr: "Public Relations",
-    event: "Event Management",
-    Other: "Other Members",
+    "content and documentation": "Content & Documentation",
+    "pr & marketing": "PR & Marketing",
+    "social media": "Social Media",
+    operations: "Operations",
   };
 
   if (loading) {
@@ -168,87 +208,94 @@ const Team = () => {
           </h2>
         </div>
 
-        {Object.keys(groupedMembers).map((domain) => (
-          <div key={domain} className="mb-16">
-            <div className="mb-8">
-              <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-200 capitalize">
-                {domainNames[domain] || domain}
-              </h3>
-              <div className="h-1 w-16 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mt-2"></div>
-            </div>
+        {Object.keys(groupedMembers).map((domain) => {
+          const domainMembers = groupedMembers[domain] || [];
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
-              {groupedMembers[domain].map((member, index) => {
-                const colorIndex = index % 4;
-                const maskIndex = index % 8;
+          if (domainMembers.length === 0) return null;
 
-                return (
-                  <div
-                    key={member.id}
-                    className="w-full max-w-[80%] sm:max-w-[220px] mx-auto"
-                  >
-                    {member.photoUrl && (
-                      <div className="mb-4 relative group">
-                        <div className="relative w-full aspect-square">
-                          <div
-                            className={`relative w-full aspect-square ${secondaryColors[colorIndex]} transition-all duration-300`}
-                            style={{
-                              WebkitMaskImage: `url(${masks[maskIndex].mask})`,
-                              maskImage: `url(${masks[maskIndex].mask})`,
-                              WebkitMaskSize: "100%",
-                              maskSize: "100%",
-                              WebkitMaskRepeat: "no-repeat",
-                              maskRepeat: "no-repeat",
-                              WebkitMaskPosition: "center",
-                              maskPosition: "center",
-                            }}
-                          >
-                            <Image
-                              src={member.photoUrl}
-                              alt={member.name}
-                              fill
-                              className="object-cover md:grayscale-[90%] md:group-hover:grayscale-0 transition-all duration-300"
-                            />
-                          </div>
+          return (
+            <div key={domain} className="mb-16">
+              <div className="mb-8">
+                <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-200 capitalize">
+                  {domainNames[domain] || domain}
+                </h3>
+                <div className="h-1 w-16 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mt-2"></div>
+              </div>
 
-                          <svg
-                            className="absolute inset-0 w-full h-full text-black dark:text-white pointer-events-none z-10"
-                            viewBox="0 0 400 400"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d={masks[maskIndex].strokePath}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
+                {domainMembers.map((member, index) => {
+                  const colorIndex = index % 4;
+                  const maskIndex = index % masks.length;
+
+                  return (
+                    <div
+                      key={member._id}
+                      className="w-full max-w-[80%] sm:max-w-[220px] mx-auto"
+                    >
+                      {member.photoUrl && (
+                        <div className="mb-4 relative group">
+                          <div className="relative w-full aspect-square">
+                            <div
+                              className={`relative w-full aspect-square ${secondaryColors[colorIndex]} transition-all duration-300`}
+                              style={{
+                                WebkitMaskImage: `url(${masks[maskIndex].mask})`,
+                                maskImage: `url(${masks[maskIndex].mask})`,
+                                WebkitMaskSize: "100%",
+                                maskSize: "100%",
+                                WebkitMaskRepeat: "no-repeat",
+                                maskRepeat: "no-repeat",
+                                WebkitMaskPosition: "center",
+                                maskPosition: "center",
+                              }}
+                            >
+                              <Image
+                                src={member.photoUrl}
+                                alt={member.name}
+                                fill
+                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 220px"
+                                className="object-cover md:grayscale-[90%] md:group-hover:grayscale-0 transition-all duration-300"
+                              />
+                            </div>
+
+                            <svg
+                              className="absolute inset-0 w-full h-full text-black dark:text-white pointer-events-none z-10"
+                              viewBox="0 0 400 400"
                               fill="none"
-                              stroke="currentColor"
-                              strokeWidth="4"
-                            />
-                          </svg>
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d={masks[maskIndex].strokePath}
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                              />
+                            </svg>
+                          </div>
                         </div>
+                      )}
+
+                      <div
+                        className={`z-5 w-full ${primaryColors[colorIndex]} rounded-full border-3 border-black dark:border-white py-2 px-4`}
+                      >
+                        <p className="text-center text-sm font-semibold text-black truncate">
+                          {member.role}
+                        </p>
                       </div>
-                    )}
 
-                    <div
-                      className={`z-5 w-full ${primaryColors[colorIndex]} rounded-full border-3 border-black dark:border-white py-2 px-4`}
-                    >
-                      <p className="text-center text-sm font-semibold text-black truncate">
-                        {member.role}
-                      </p>
+                      <div
+                        className={`transform -translate-y-[2px] w-full ${secondaryColors[colorIndex]} rounded-full border-3 border-black dark:border-white py-4 px-4`}
+                      >
+                        <p className="text-center text-lg font-bold text-black">
+                          {member.name}
+                        </p>
+                      </div>
                     </div>
-
-                    <div
-                      className={`transform -translate-y-[2px] w-full ${secondaryColors[colorIndex]} rounded-full border-3 border-black dark:border-white py-4 px-4`}
-                    >
-                      <p className="text-center text-lg font-bold text-black">
-                        {member.name}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
