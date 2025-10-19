@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { CalendarDays, MapPin, Mic } from "lucide-react";
 
 export interface EventData {
   _id: string;
@@ -62,34 +63,58 @@ const EventCard: React.FC<EventCardProps> = ({ event, config, variant }) => {
       </div>
 
       <div
-        className={`${config.color.bg} p-6 ${contentSpacing} rounded-2xl m-3 relative z-10`}
+        className={`${config.color.bg} p-6 ${contentSpacing} rounded-2xl m-3 relative z-10 flex flex-col justify-between min-h-[300px]`}
       >
-        <h3 className={`text-xl font-bold ${config.text.heading} mb-3`}>
-          {event.title}
-        </h3>
-
-        <div className={`space-y-2 text-sm ${config.text.meta} mb-3`}>
-          <p className="flex items-start gap-2">
-            <span className={`text-base ${config.text.icon}`}>📅</span>
-            <span className="font-medium">{event.date}</span>
+        <div>
+          <h3 className={`text-xl font-bold ${config.text.heading} mb-3`}>
+            {event.title}
+          </h3>
+          <p
+            className={`${config.text.body} text-sm leading-relaxed font-normal`}
+          >
+            {event.description}
           </p>
-          {event.venue && (
-            <p className="flex items-start gap-2">
-              <span className={`text-base ${config.text.icon}`}>📍</span>
-              <span className="font-medium">{event.venue}</span>
-            </p>
-          )}
-          {event.speaker && (
-            <p className="flex items-start gap-2">
-              <span className={`text-base ${config.text.icon}`}>🎙️</span>
-              <span className="font-medium">Speaker: {event.speaker}</span>
-            </p>
-          )}
         </div>
 
-        <p className={`${config.text.body} text-sm leading-relaxed font-normal`}>
-          {event.description}
-        </p>
+        <div className="mt-6">
+          <hr className="border-t-2 border-white mb-4" />
+          <div className={`space-y-2 text-sm ${config.text.meta}`}>
+            <div className="flex items-center gap-2">
+              <CalendarDays
+                className={`text-base ${config.text.icon}`}
+                size={20}
+                color="currentColor"
+              />
+              <span className="font-semibold">
+                {event.date}
+              </span>
+            </div>
+            {event.venue && (
+              <div className="flex items-center gap-2">
+                <MapPin
+                  className={`text-base ${config.text.icon}`}
+                  size={20}
+                  color="currentColor"
+                />
+                <span className="font-semibold">
+                  {event.venue}
+                </span>
+              </div>
+            )}
+            {event.speaker && (
+              <div className="flex items-center gap-2">
+                <Mic
+                  className={`text-base ${config.text.icon}`}
+                  size={20}
+                  color="currentColor"
+                />
+                <span className="font-semibold">
+                  Speaker: {event.speaker}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

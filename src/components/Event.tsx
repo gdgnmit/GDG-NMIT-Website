@@ -38,7 +38,7 @@ const BASE_CARD_CONFIGS: CardConfig[] = [
       heading: "text-gray-900",
       meta: "text-gray-900",
       body: "text-gray-800",
-      icon: "text-gray-700",
+      icon: "text-gray-800",
     },
     pin: { image: "/yellow.png", size: 150 },
   },
