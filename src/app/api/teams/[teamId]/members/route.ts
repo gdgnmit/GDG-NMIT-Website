@@ -3,56 +3,6 @@ import { ObjectId } from "mongodb";
 import { connectToDatabase } from "../../../../../lib/mongodb";
 import cloudinary from "../../../../../lib/cloudinary";
 
-export async function GET(
-  request: NextRequest,
-  context: { params: Promise<{ teamId: string }> }
-) {
-  try {
-    const { teamId } = await context.params;
-
-    if (!ObjectId.isValid(teamId)) {
-      return NextResponse.json({ error: "Invalid teamId" }, { status: 400 });
-    }
-
-    const teamObjectId = new ObjectId(teamId);
-    const { client } = await connectToDatabase();
-    const db = client.db();
-
-    const membersCollection = db.collection("members");
-
-    const members = await membersCollection
-      .find({ teamId: teamObjectId })
-      .project({
-        name: 1,
-        role: 1,
-        domain: 1,
-        tier: 1,
-        photoUrl: 1,
-        teamId: 1,
-      })
-      .limit(100)
-      .toArray();
-
-    const serializedMembers = members.map((member) => ({
-      id: member._id?.toString() ?? "",
-      name: member.name ?? "",
-      role: member.role ?? "",
-      domain: member.domain ?? null,
-      tier: member.tier ?? null,
-      photoUrl: member.photoUrl ?? "",
-      teamId: member.teamId?.toString() ?? teamId,
-    }));
-
-    return NextResponse.json({ members: serializedMembers });
-  } catch (error) {
-    console.error("Unexpected error in GET /api/teams/[teamId]/members:", error);
-    return NextResponse.json(
-      { error: "Unable to fetch team members" },
-      { status: 500 }
-    );
-  }
-}
-
 export async function POST(
   request: NextRequest,
   context: { params: Promise<{ teamId: string }> }
