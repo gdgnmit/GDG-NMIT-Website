@@ -62,11 +62,16 @@ export default function ProjectsPage() {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center px-10 py-20 bg-grid overflow-hidden">
-      <h1 className="text-4xl font-bold mb-16">Project</h1>
+    <div className="relative min-h-screen flex flex-col px-10 py-20 bg-grid overflow-hidden">
+      <div className="pt-4 px-8 sm:px-12 lg:px-16 xl:px-20 mb-4">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">
+          Projects
+        </h1>
+        <div className="h-1 w-20 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mt-2"></div>
+      </div>
 
       {/* Carousel */}
-      <div className="relative w-full max-w-9xl flex items-center justify-center">
+      <div className="relative w-full max-w-9xl flex items-center justify-center mt-8">
         {/* Left Arrow */}
         <button
           onClick={prevSlide}

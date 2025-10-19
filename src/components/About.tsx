@@ -19,7 +19,7 @@ const highlights = [
       </svg>
     ),
     accent: {
-      bg: "bg-[#4285F4]",
+      bg: "bg-g-blue",
       fg: "text-white",
     },
   },
@@ -39,7 +39,7 @@ const highlights = [
       </svg>
     ),
     accent: {
-      bg: "bg-[#0F9D58]",
+      bg: "bg-g-green",
       fg: "text-white",
     },
   },
@@ -59,7 +59,7 @@ const highlights = [
       </svg>
     ),
     accent: {
-      bg: "bg-[#C58B00]",
+      bg: "bg-g-yellow",
       fg: "text-white",
     },
   },
@@ -79,7 +79,7 @@ const highlights = [
       </svg>
     ),
     accent: {
-      bg: "bg-[#DB4437]",
+      bg: "bg-g-red",
       fg: "text-white",
     },
   },
