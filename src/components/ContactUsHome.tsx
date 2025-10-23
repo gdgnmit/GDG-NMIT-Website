@@ -74,7 +74,7 @@ const ContactUsHome = () => {
     <section className="bg-white dark:bg-g-almost-black">
       <div className="pt-8 px-8 sm:pt-12 sm:px-12 lg:pt-16 lg:px-16 xl:px-20 mb-4">
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">
-          Contact Us
+          Join Our Community
         </h2>
         <div className="h-1 w-20 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mt-2"></div>
       </div>
