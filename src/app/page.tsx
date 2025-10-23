@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import HomePage from "@/components/HomePage";
 import Domain from "@/components/Domain";
-import Contact from "@/components/Contact";
+import ContactUsHome from "@/components/ContactUsHome";
 import WhatWeDo from "@/components/WhatWeDo";
 import Loader from "@/components/Loader";
 
@@ -23,7 +23,7 @@ export default function Home() {
           <HomePage />
           <WhatWeDo />
           <Domain />
-          <Contact />
+          <ContactUsHome />
         </>
       )}
     </>
