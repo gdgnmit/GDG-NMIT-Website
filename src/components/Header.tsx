@@ -14,7 +14,6 @@ interface NavItem {
 const navItems: NavItem[] = [
   { name: "ABOUT US", path: "/about", color: "blue" },
   { name: "EVENT", path: "/event", color: "green" },
-  { name: "PROJECTS", path: "/projects", color: "yellow" },
   { name: "TEAM", path: "/team", color: "blue" },
   { name: "CONTACT US", path: "/contact", color: "green" },
 ];
@@ -152,7 +151,7 @@ const Header: React.FC = () => {
             </svg>
           </button>
         </div>
-        <ul className="flex flex-col space-y-3 p-6 text-black dark:text-white">
+        <ul className="flex flex-col space-y-3 p-10 text-black dark:text-white">
           {navItems.map((item, index) => (
             <li
               key={item.name}

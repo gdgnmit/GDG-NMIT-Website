@@ -75,10 +75,11 @@ type LayoutState = {
   minHeight: number;
 };
 
-const Event: React.FC = () => {
-  // State management
-  const [events, setEvents] = useState<EventData[]>([]);
-  const [loading, setLoading] = useState(true);
+interface EventProps {
+  events: any[];
+}
+
+const Event: React.FC<EventProps> = ({ events }) => {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [shouldAnimate, setShouldAnimate] = useState(false);
@@ -87,92 +88,9 @@ const Event: React.FC = () => {
     minHeight: 1000,
   });
 
-  // Fallback event data
-  const fallbackEvents: EventData[] = [
-    {
-      _id: "1",
-      title: "CodeSprint 3.0 2025",
-      description:
-        "GDG NMIT's annual premium coding extravaganza! Join us for a 7-hour coding event with competitive programming challenges, problem-solving, and networking opportunities.",
-      date: "April 4, 2025 | 10 AM - 5 PM",
-      venue: "Room 271, D Block, NMIT",
-    },
-    {
-      _id: "2",
-      title: "Winter Tech Arc 2024",
-      description:
-        "AI Agents: Decoded - A hands-on workshop exploring AI agents with live demonstrations, Q&A sessions, and expert insights into cutting-edge AI technologies.",
-      date: "December 21, 2024 | 9 AM - 2 PM",
-      venue: "Room 271, D Block, NMIT",
-      speaker: "Tarun R Jain",
-    },
-    {
-      _id: "3",
-      title: "Building AI Agents With AutoGen",
-      description:
-        "Dive into the world of AI agents with AutoGen! Features live demonstrations, comprehensive introduction to AutoGen framework, and expert guidance on building intelligent agents.",
-      date: "March 28, 2025",
-      venue: "Room 271, D Block, NMIT",
-      speaker: "Tezan Sahu",
-    },
-    {
-      _id: "4",
-      title: "KubeTools Day 2024",
-      description:
-        "A one-of-a-kind workshop in collaboration with Docker and Kubernetes! Learn container orchestration, cloud-native practices, and modern DevOps tools.",
-      date: "January 20, 2024",
-      venue: "Sir M.V. Auditorium, NMIT",
-    },
-    {
-      _id: "5",
-      title: "NextGen Nexus 2024",
-      description:
-        "5 Days. 5 GDG Speakers. 5 Mindblowing Experiences! Join our in-house GDG specialists for five amazing sessions. A unique hybrid learning experience.",
-      date: "December 27, 2023 - January 3, 2024",
-      venue: "Hybrid (Online + Offline)",
-    },
-  ];
-
-  // Fetch events from API
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get("/api/events");
-        const { pastEvents, upcomingEvents } = response.data;
-
-        const allEvents = [...(pastEvents || []), ...(upcomingEvents || [])];
-        const transformedEvents: EventData[] = allEvents.map(
-          (event: EventData) => ({
-            _id: event._id,
-            title: event.title,
-            description: event.description,
-            date: event.date,
-            venue: event.venue,
-            speaker: event.speaker,
-          })
-        );
-
-        setEvents(
-          transformedEvents.length >= 5
-            ? transformedEvents.slice(0, 5)
-            : fallbackEvents
-        );
-      } catch (err) {
-        console.error("Failed to fetch events:", err);
-        setEvents(fallbackEvents);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEvents();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // Intersection Observer for animation trigger
   useEffect(() => {
-    if (loading || events.length === 0) return;
+    if (events.length === 0) return;
 
     const container = containerRef.current;
     if (!container) return;
@@ -191,7 +109,7 @@ const Event: React.FC = () => {
 
     observer.observe(container);
     return () => observer.disconnect();
-  }, [loading, events]);
+  }, [events]);
 
   // Pendulum animation
   useEffect(() => {
@@ -248,7 +166,7 @@ const Event: React.FC = () => {
   }, [events]);
 
   useLayoutEffect(() => {
-    if (loading || events.length === 0) return;
+    if (events.length === 0) return;
 
     const cards = cardRefs.current.slice(0, events.length);
     if (cards.length === 0) return;
@@ -301,44 +219,9 @@ const Event: React.FC = () => {
         minHeight: desiredMinHeight,
       };
     });
-  }, [events, loading]);
+  }, [events]);
 
-  // Fetch events on component mount
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get("/api/events");
-        const { pastEvents, upcomingEvents } = response.data;
-
-        const allEvents = [...(pastEvents || []), ...(upcomingEvents || [])];
-        const transformedEvents: EventData[] = allEvents.map(
-          (event: EventData) => ({
-            _id: event._id,
-            title: event.title,
-            description: event.description,
-            date: event.date,
-            venue: event.venue,
-            speaker: event.speaker,
-          })
-        );
-
-        setEvents(
-          transformedEvents.length >= 5
-            ? transformedEvents.slice(0, 5)
-            : fallbackEvents
-        );
-      } catch (err) {
-        console.error("Failed to fetch events:", err);
-        setEvents(fallbackEvents);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEvents();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // ...existing code...
 
   // Memoize event card data to avoid recalculating positions on every render
   const eventCardsData = useMemo(() => {
@@ -349,32 +232,6 @@ const Event: React.FC = () => {
       row: Math.floor(index / BASE_POSITIONS.length),
     }));
   }, [events]);
-
-  // Loading state
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-g-almost-black flex items-center justify-center">
-        <div
-          className="flex flex-col items-center gap-2"
-          role="status"
-          aria-live="polite"
-        >
-          <svg
-            className="animate-spin fill-neutral-400 dark:fill-neutral-500"
-            xmlns="http://www.w3.org/2000/svg"
-            height="56px"
-            viewBox="0 -960 960 960"
-            width="56px"
-          >
-            <path d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-155.5t86-127Q252-817 325-848.5T480-880q17 0 28.5 11.5T520-840q0 17-11.5 28.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160q133 0 226.5-93.5T800-480q0-17 11.5-28.5T840-520q17 0 28.5 11.5T880-480q0 82-31.5 155t-86 127.5q-54.5 54.5-127 86T480-80Z" />
-          </svg>
-          <p className="text-center font-medium text-neutral-600 dark:text-neutral-400">
-            Loading events...
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   const getRowOffset = (row: number) =>
     layoutState.offsets[row] ?? row * DEFAULT_ROW_SPACING;
@@ -422,7 +279,7 @@ const Event: React.FC = () => {
                   <div
                     key={event._id}
                     ref={setCardRef(index)}
-                    className="absolute w-[320px] will-change-transform z-10"
+                    className="absolute w-[300px] will-change-transform z-10"
                     style={{ top: `${top}px`, left: basePosition.left }}
                   >
                     {/* Card Container */}

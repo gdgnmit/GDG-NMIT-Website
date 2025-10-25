@@ -88,57 +88,32 @@ const tierRank: Record<string, number> = {
   recruit: -4,
 };
 
-const Team = () => {
-  const [teamData, setTeamData] = useState<TeamData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchTeamData = async () => {
-      try {
-        setLoading(true);
+interface TeamProps {
+  teamData: any;
+}
 
-        const teamsResponse = await axios.get("/api/teams");
-        const teams = teamsResponse.data?.teams || [];
-
-        if (teams.length === 0) {
-          setError("No teams found");
-          return;
-        }
-
-        const latestTeam = teams[0];
-        setTeamData(latestTeam);
-        setError(null);
-      } catch (err) {
-        console.error("Failed to fetch team data:", err);
-        setError("Failed to load team members");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTeamData();
-  }, []);
+const Team: React.FC<TeamProps> = ({ teamData }) => {
 
   const groupedMembers = useMemo(() => {
-    if (!teamData) return {};
+    if (!teamData || !teamData.members) return {};
 
     const grouped: Record<string, Member[]> = {};
 
     Object.entries(teamData.members).forEach(([domain, tiers]) => {
       grouped[domain] = [];
 
-      Object.entries(tiers).forEach(([tier, members]) => {
+      Object.entries(tiers as Record<string, any>).forEach(([tier, members]) => {
         if (
           tier === "member" &&
           typeof members === "object" &&
-          !Array.isArray(members)
+          !Array.isArray(members) && members !== null
         ) {
-          if (members.past) {
-            grouped[domain].push(...members.past);
+          if ((members as any).past) {
+            grouped[domain].push(...((members as any).past as Member[]));
           }
-          if (members.recruit) {
-            grouped[domain].push(...members.recruit);
+          if ((members as any).recruit) {
+            grouped[domain].push(...((members as any).recruit as Member[]));
           }
         } else if (Array.isArray(members)) {
           grouped[domain].push(...members);
@@ -166,38 +141,7 @@ const Team = () => {
     operations: "Operations",
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-g-almost-black flex items-center justify-center">
-        <div
-          className="flex flex-col items-center gap-2"
-          role="status"
-          aria-live="polite"
-        >
-          <svg
-            className="animate-spin fill-neutral-400 dark:fill-neutral-500"
-            xmlns="http://www.w3.org/2000/svg"
-            height="56px"
-            viewBox="0 -960 960 960"
-            width="56px"
-          >
-            <path d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-155.5t86-127Q252-817 325-848.5T480-880q17 0 28.5 11.5T520-840q0 17-11.5 28.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160q133 0 226.5-93.5T800-480q0-17 11.5-28.5T840-520q17 0 28.5 11.5T880-480q0 82-31.5 155t-86 127.5q-54.5 54.5-127 86T480-80Z" />
-          </svg>
-          <p className="text-center font-medium text-neutral-600 dark:text-neutral-400">
-            Loading team members...
-          </p>
-        </div>
-      </div>
-    );
-  }
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-lg text-red-600">{error}</p>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-g-almost-black pt-16">

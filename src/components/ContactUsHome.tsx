@@ -21,18 +21,18 @@ const ContactUsHome = () => {
   }: ContactCardProps) => {
     return (
       <div
-        className={`rounded-2xl shadow-xl p-6 flex flex-col justify-between text-white transition-transform transform hover:scale-105 ${color}`}
+        className={`rounded-2xl shadow-xl p-8 flex flex-col justify-between text-white transition-transform transform hover:scale-105 ${color}`}
       >
-        <div className="flex items-center gap-3 mb-4">
-          <Icon size={32} />
-          <h2 className="text-xl font-bold">{title}</h2>
+        <div className="flex items-center gap-3 mb-5">
+          <Icon size={36} />
+          <h2 className="text-2xl font-bold">{title}</h2>
         </div>
-        <p className="text-sm opacity-90 mb-6">{description}</p>
+        <p className="text-base opacity-90 mb-7">{description}</p>
         <a
           href={link}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block bg-white/20 hover:bg-white/30 text-white font-semibold py-2 px-4 rounded-md text-center transition"
+          className="inline-block bg-white/20 hover:bg-white/30 text-white font-semibold py-3 px-5 rounded-md text-center transition"
         >
           {buttonText}
         </a>
@@ -71,7 +71,7 @@ const ContactUsHome = () => {
   ];
 
   return (
-    <section className="bg-white dark:bg-g-almost-black">
+    <section className="bg-white dark:bg-g-almost-black ">
       <div className="pt-8 px-8 sm:pt-12 sm:px-12 lg:pt-16 lg:px-16 xl:px-20 mb-4">
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">
           Join Our Community
@@ -80,7 +80,7 @@ const ContactUsHome = () => {
       </div>
 
       <div className="pt-6 pb-12 px-8 sm:px-12 lg:px-16 xl:px-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
           {cards.map((card, index) => (
             <ContactCard key={index} {...card} />
           ))}

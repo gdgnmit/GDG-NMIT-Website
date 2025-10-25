@@ -13,7 +13,7 @@ const Domain = () => {
       h: 310.5,
       name: "Technical",
       description:
-        "Building cutting-edge solutions, organizing workshops, and driving technical excellence.",
+        "Building cutting-edge solutions, organizing workshops, and driving technical excellence through innovation and collaboration.",
       color: "border-g-green",
     },
     {
@@ -23,7 +23,7 @@ const Domain = () => {
       h: 142,
       name: "Design",
       description:
-        "Crafting beautiful experiences through UI/UX design, branding, and creative content.",
+        "Crafting beautiful experiences through UI/UX design, branding, and creative content that inspire and engage users.",
       color: "border-g-blue",
     },
     {
@@ -33,7 +33,7 @@ const Domain = () => {
       h: 169,
       name: "Social Media",
       description:
-        "Engaging our community across platforms and amplifying our presence online.",
+        "Engaging our community across platforms and amplifying our presence online through creative campaigns and storytelling.",
       color: "border-g-yellow",
     },
     {
@@ -43,7 +43,7 @@ const Domain = () => {
       h: 212,
       name: "Content & Documentation",
       description:
-        "Creating engaging stories, blogs, and documentation to inspire and educate the community.",
+        "Creating engaging stories, blogs, and documentation to inspire and educate the community with clarity and creativity.",
       color: "border-g-red",
     },
     {
@@ -53,7 +53,7 @@ const Domain = () => {
       h: 212,
       name: "PR & Marketing",
       description:
-        "Building relationships, managing communications, and amplifying our message to the world.",
+        "Building relationships, managing communications, and amplifying our message to the world with strategy and impact.",
       color: "border-g-green",
     },
     {
@@ -63,7 +63,7 @@ const Domain = () => {
       h: 142,
       name: "Operations",
       description:
-        "Orchestrating amazing events, hackathons, and meetups that bring the community together.",
+        "Orchestrating amazing events, hackathons, and meetups that bring the community together with seamless execution.",
       color: "border-g-blue",
     },
   ];

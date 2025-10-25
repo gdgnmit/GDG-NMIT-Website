@@ -37,7 +37,7 @@ interface EventCardProps {
 const EventCard: React.FC<EventCardProps> = ({ event, config, variant }) => {
   const shadowClass = variant === "desktop" ? "shadow-2xl" : "shadow-xl";
   const contentSpacing =
-    variant === "desktop" ? "mt-12 min-h-[350px]" : "mt-16 min-h-[300px]";
+    variant === "desktop" ? "mt-12 min-h-[330px]" : "mt-16 min-h-[300px]";
   const pinOffset = variant === "desktop" ? 0.55 : 0.5;
 
   return (

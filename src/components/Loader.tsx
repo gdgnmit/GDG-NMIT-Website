@@ -18,7 +18,7 @@ export default function Loader({
   }, [isLoaderReady, onReady]);
 
   return (
-    <div className={`grid place-items-center ${className}`}>
+    <div className={`flex items-center justify-center min-h-screen ${className}`}>
       <DotLottieReact
         src="/assets/loader.lottie"
         autoplay
