@@ -16,10 +16,9 @@ const Footer: React.FC = () => {
   ];
 
   const socialLinks = [
-    { Icon: FaInstagram, href: "#", label: "Instagram" },
-    { Icon: FaLinkedin, href: "#", label: "LinkedIn" },
-    { Icon: FaTwitter, href: "#", label: "Twitter" },
-    { Icon: FaGithub, href: "#", label: "GitHub" },
+    { Icon: FaInstagram, href: "https://www.instagram.com/gdgnmit", label: "Instagram" },
+    { Icon: FaLinkedin, href: "https://www.linkedin.com/company/google-developer-groups-nmit/posts/?feedView=all", label: "LinkedIn" },
+    { Icon: FaGithub, href: "https://github.com/gdgnmit", label: "GitHub" },
   ];
 
   return (
@@ -30,16 +29,25 @@ const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12">
           <div className="sm:col-span-2 lg:col-span-2">
-            <Link href="/" className="flex items-center mb-4">
+            <Link href="/" className="flex items-center flex-shrink-0">
               <Image
-                src="/assets/GDG On Campus NMIT Logo.svg"
-                alt="GDG NMIT Logo"
-                width={300}
-                height={80}
-                className="h-12 sm:h-14 lg:h-16 w-auto"
+                src="/assets/gdg.svg"
+                alt="GDG Logo"
+                width={50}
+                height={50}
+                className="h-8 w-auto"
               />
+              <div className="flex flex-col align-left justify-center">
+                <h1 className="ml-2 text-xl lg:text-2xl text-black dark:text-white leading-6">
+                  <span className="block sm:hidden text-xl font-bold">GDG NMIT</span>
+                  <span className="hidden sm:block">Google Developer Groups</span>
+                </h1>
+                <h2 className="hidden sm:block ml-2 text-md lg:text-md text-g-blue leading-4">
+                  Nitte Meenakshi Institute of Technology
+                </h2>
+              </div>
             </Link>
-            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-md mb-6">
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-md mb-6 mt-8">
               Empowering developers through collaboration, learning, and
               innovation. Let&apos;s build a better tech future — together.
             </p>
