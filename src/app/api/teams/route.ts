@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 import { connectToDatabase } from "../../../lib/mongodb";
 
 const standardTiers = [
-  'faculty advisor', 'lead', 'co-lead', 'student-advisor',
+  'faculty coordinator', 'lead', 'co-lead', 'student-advisor',
   'mentor', 'core', 'member'
 ];
 

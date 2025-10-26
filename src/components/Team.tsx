@@ -69,7 +69,7 @@ const masks = maskPaths.map((pathData) => {
 });
 
 const tierRank: Record<string, number> = {
-  "faculty advisor": 12,
+  "faculty coordinator": 12,
   lead: 11,
   "co-lead": 10,
   "student-advisor": 9,
@@ -132,7 +132,7 @@ const Team: React.FC<TeamProps> = ({ teamData }) => {
   }, [teamData]);
 
   const domainNames: Record<string, string> = {
-    club: "Club Ops",
+    club: "Heads & Advisors",
     tech: "Technical Team",
     design: "Design Team",
     "content and documentation": "Content & Documentation",
