@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
-import { FaInstagram, FaLinkedin, FaFacebookSquare } from "react-icons/fa";
+import { FaInstagram, FaLinkedin, FaFacebookSquare, FaGithub } from "react-icons/fa";
 
 // Constants
 const JUMP_HEIGHT = -80;
@@ -36,7 +36,7 @@ export default function HomeScreen() {
       setCurrentFrame((prev) => (prev % 3) + 1); // Cycle 1,2,3,1,2,3...
       animFrameRef.current = window.setTimeout(animateDino, 100);
     };
-    
+
     animateDino();
 
     return () => {
@@ -45,7 +45,7 @@ export default function HomeScreen() {
       }
     };
   }, []);
-  
+
   useEffect(() => {
     gridTweenRef.current = gsap.to(gridRef.current, {
       backgroundPosition: "200px 200px",
@@ -175,7 +175,7 @@ export default function HomeScreen() {
       spawnTimeout.current = window.setTimeout(
         spawnObstacle,
         Math.random() * (OBSTACLE_MAX_DELAY - OBSTACLE_MIN_DELAY) +
-          OBSTACLE_MIN_DELAY
+        OBSTACLE_MIN_DELAY
       );
     };
 
@@ -308,21 +308,26 @@ export default function HomeScreen() {
                     Icon: FaInstagram,
                     color: "hover:text-pink-500 dark:hover:text-pink-400",
                     label: "Instagram",
+                    href: "https://www.instagram.com/gdgnmit",
                   },
                   {
                     Icon: FaLinkedin,
                     color: "hover:text-blue-700 dark:hover:text-blue-600",
                     label: "LinkedIn",
+                    href: "https://www.linkedin.com/company/google-developer-groups-nmit/posts/?feedView=all",
                   },
                   {
-                    Icon: FaFacebookSquare,
-                    color: "hover:text-blue-500",
-                    label: "Facebook",
+                    Icon: FaGithub,
+                    color: "hover:text-grey-500",
+                    label: "Github",
+                    href: "https://github.com/gdgnmit",
                   },
-                ].map(({ Icon, color, label }, i) => (
+                ].map(({ Icon, color, label, href }, i) => (
                   <a
                     key={i}
-                    href="#"
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     aria-label={label}
                     className="transform hover:-translate-y-0.5 transition-all duration-300"
                   >
