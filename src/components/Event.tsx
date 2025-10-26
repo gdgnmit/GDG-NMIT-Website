@@ -17,7 +17,7 @@ const BASE_CARD_CONFIGS: CardConfig[] = [
       body: "text-white/95",
       icon: "text-white",
     },
-    pin: { image: "/blue-photoroom.png", size: 120 },
+    pin: { image: "/blue-Photoroom.png", size: 120 },
   },
   {
     color: { bg: "bg-[#0F9D58]", border: "border-[#0F9D58]" },
@@ -27,7 +27,7 @@ const BASE_CARD_CONFIGS: CardConfig[] = [
       body: "text-white/95",
       icon: "text-white",
     },
-    pin: { image: "/green-photoroom.png", size: 140 },
+    pin: { image: "/green-Photoroom.png", size: 140 },
   },
   {
     color: { bg: "bg-[#F9AB00]", border: "border-[#F9AB00]" },
@@ -47,7 +47,7 @@ const BASE_CARD_CONFIGS: CardConfig[] = [
       body: "text-white/95",
       icon: "text-white",
     },
-    pin: { image: "/red-photoroom.png", size: 140 },
+    pin: { image: "/red-Photoroom.png", size: 140 },
   },
 ];
 
