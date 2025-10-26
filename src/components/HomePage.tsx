@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { FaInstagram, FaLinkedin, FaFacebookSquare } from "react-icons/fa";
@@ -15,7 +15,7 @@ const BIRD_SPAWN_CHANCE = 0.4;
 const BIRD_SPACING = 30;
 const GRID_ANIMATION_DURATION = 8;
 let COLLISION_OFFSETS = { start: 120, end: 50 };
-let adjustedDuration = 5; // Default value for obstacle duration
+let adjustedDuration = 5;
 
 export default function HomeScreen() {
   const dinoRef = useRef<HTMLDivElement>(null);
@@ -27,8 +27,26 @@ export default function HomeScreen() {
   const spawnTimeout = useRef<number | null>(null);
   const gridTweenRef = useRef<gsap.core.Tween | null>(null);
   const idleTweenRef = useRef<gsap.core.Tween | null>(null);
+  const animFrameRef = useRef<number | null>(null);
+  const [currentFrame, setCurrentFrame] = useState(1);
+
+  // Animate dino frames
   useEffect(() => {
-    // Subtle floating animation for grid background
+    const animateDino = () => {
+      setCurrentFrame((prev) => (prev % 3) + 1); // Cycle 1,2,3,1,2,3...
+      animFrameRef.current = window.setTimeout(animateDino, 100);
+    };
+    
+    animateDino();
+
+    return () => {
+      if (animFrameRef.current) {
+        window.clearTimeout(animFrameRef.current);
+      }
+    };
+  }, []);
+  
+  useEffect(() => {
     gridTweenRef.current = gsap.to(gridRef.current, {
       backgroundPosition: "200px 200px",
       duration: GRID_ANIMATION_DURATION,
@@ -37,20 +55,13 @@ export default function HomeScreen() {
       ease: "power1.inOut",
     });
 
-    // Dino idle bounce
-    idleTweenRef.current = gsap.to(dinoRef.current, {
-      y: "-=4",
-      duration: 0.3,
-      yoyo: true,
-      repeat: -1,
-      ease: "power1.inOut",
-    });
+    // Remove the idle bounce since we'll use CSS animation for running
+    // idleTweenRef is no longer needed for the dino
 
     const dinoJump = () => {
       if (isJumping.current || !dinoRef.current) return;
 
       isJumping.current = true;
-      idleTweenRef.current?.pause();
 
       gsap.to(dinoRef.current, {
         y: JUMP_HEIGHT,
@@ -60,16 +71,13 @@ export default function HomeScreen() {
         repeat: 1,
         onComplete: () => {
           isJumping.current = false;
-          idleTweenRef.current?.resume();
         },
       });
     };
 
     const spawnObstacle = () => {
-      // If tab is hidden, don't spawn new obstacles. A visibility handler will resume spawning.
       if (!spawnActive.current) return;
 
-      // Clear any previously scheduled reference for this run
       spawnTimeout.current = null;
       const obstacle = document.createElement("div");
       obstacle.className = "absolute";
@@ -84,23 +92,20 @@ export default function HomeScreen() {
       let isCloud = false;
 
       if (rand < CLOUD_SPAWN_CHANCE) {
-        // Cloud (20%)
         imgSrc = "/assets/cloud.png";
         width = 100 + Math.random() * 50;
         height = 60;
         bottomPos = 200 + Math.random() * 50;
         isCloud = true;
       } else if (rand < BIRD_SPAWN_CHANCE) {
-        // Bird (20%)
         imgSrc = "/assets/bird.png";
         width = 64;
         height = 40;
         isBird = true;
 
-        // Cactus exclusion zone
-        const cactusLeft = 120; // cactus horizontal position (px from left)
-        const cactusWidth = 40; // cactus width
-        const cactusMargin = 80; // min horizontal distance from cactus
+        const cactusLeft = 120;
+        const cactusWidth = 40;
+        const cactusMargin = 80;
 
         let tries = 0;
         let safe = false;
@@ -109,7 +114,6 @@ export default function HomeScreen() {
           bottomPos = 60 + Math.random() * 30;
           leftPos =
             window.innerWidth - Math.random() * (window.innerWidth - 200);
-          // Bird must not spawn horizontally within cactus exclusion zone
           safe =
             leftPos < cactusLeft - cactusMargin ||
             leftPos > cactusLeft + cactusWidth + cactusMargin;
@@ -123,7 +127,6 @@ export default function HomeScreen() {
         );
         activeBirds.current.push(bottomPos);
       } else {
-        // Cactus/obstacle (60%)
         imgSrc = "/assets/vector_light.png";
         width = 40;
         height = 64;
@@ -140,7 +143,6 @@ export default function HomeScreen() {
       obstacle.style.left = `${window.innerWidth}px`;
       obstacle.style.bottom = `${bottomPos}px`;
 
-      // Determine duration (clouds move slower)
       const duration = isCloud ? 12 + Math.random() * 3 : adjustedDuration;
 
       gsap.to(obstacle, {
@@ -170,7 +172,6 @@ export default function HomeScreen() {
         },
       });
 
-      // Schedule next obstacle spawn and keep a reference so we can cancel if tab visibility changes
       spawnTimeout.current = window.setTimeout(
         spawnObstacle,
         Math.random() * (OBSTACLE_MAX_DELAY - OBSTACLE_MIN_DELAY) +
@@ -178,36 +179,27 @@ export default function HomeScreen() {
       );
     };
 
-    // Visibility change handler: pause/resume spawning
     const handleVisibilityChange = () => {
       spawnActive.current = document.visibilityState === "visible";
 
       if (!spawnActive.current) {
-        // stop scheduled spawn
         if (spawnTimeout.current) {
           window.clearTimeout(spawnTimeout.current);
           spawnTimeout.current = null;
         }
-        // pause animations
         gridTweenRef.current?.pause();
-        idleTweenRef.current?.pause();
       } else {
-        // resume spawning if nothing scheduled
         if (!spawnTimeout.current) {
           spawnObstacle();
         }
-        // resume animations
         gridTweenRef.current?.resume();
-        idleTweenRef.current?.resume();
       }
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
-    // Start spawning if visible
     if (document.visibilityState === "visible") spawnObstacle();
 
-    // Clean up listener, any pending timeout and kill tweens on unmount
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       if (spawnTimeout.current) {
@@ -215,28 +207,22 @@ export default function HomeScreen() {
         spawnTimeout.current = null;
       }
       gridTweenRef.current?.kill?.();
-      idleTweenRef.current?.kill?.();
       gridTweenRef.current = null;
-      idleTweenRef.current = null;
     };
   }, []);
 
   const adjustForViewport = () => {
     const viewportWidth = window.innerWidth;
-
-    // Adjust obstacle speed based on viewport width
-    const baseDuration = 5; // Default duration for larger screens
-    const speedFactor = viewportWidth < 768 ? 0.8 : 1; // Faster on smaller screens
+    const baseDuration = 5;
+    const speedFactor = viewportWidth < 768 ? 0.8 : 1;
     adjustedDuration = baseDuration * speedFactor;
 
-    // Adjust jump timing based on viewport width
-    const baseJumpDuration = 0.5; // Default jump duration
-    const jumpFactor = viewportWidth < 768 ? 1.2 : 1; // Slightly longer on smaller screens
+    const baseJumpDuration = 0.5;
+    const jumpFactor = viewportWidth < 768 ? 1.2 : 1;
     JUMP_DURATION = baseJumpDuration * jumpFactor;
 
-    // Adjust collision detection offsets based on viewport width
     const baseCollisionOffsets = { start: 120, end: 50 };
-    const collisionFactor = viewportWidth < 768 ? 0.8 : 1; // Narrower range on smaller screens
+    const collisionFactor = viewportWidth < 768 ? 0.8 : 1;
     COLLISION_OFFSETS = {
       start: baseCollisionOffsets.start * collisionFactor,
       end: baseCollisionOffsets.end * collisionFactor,
@@ -254,9 +240,7 @@ export default function HomeScreen() {
 
   return (
     <main className="w-full relative">
-      {/* Dino Game Section - Self-contained with its own background */}
       <section className="relative w-full overflow-hidden">
-        {/* Grid Background - contained within section */}
         <div
           ref={gridRef}
           className="absolute left-0 top-0 w-full h-full z-0 pointer-events-none
@@ -266,9 +250,7 @@ export default function HomeScreen() {
           style={{ backgroundSize: "40px 40px", opacity: 0.7 }}
         />
 
-        {/* Game Container - Responsive heights for all screen sizes */}
         <div className="relative w-full h-80 sm:h-96 md:h-[26rem] lg:h-[28rem]">
-          {/* Hero Image - Centered independently with higher z-index */}
           <div className="absolute inset-0 flex items-center justify-around z-30 pointer-events-none">
             <div className="max-w-sm sm:max-w-lg md:max-w-xg lg:max-w-2xl px-4 pt-16">
               <Image
@@ -283,31 +265,26 @@ export default function HomeScreen() {
             <div></div>
           </div>
 
-          {/* Dino - Position at the very bottom to align with content section border */}
+          {/* Dino with animated frames */}
           <div
             ref={dinoRef}
-            className="absolute bottom-0 left-4 sm:left-6 md:left-10 w-16 h-16 sm:w-10 sm:h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 z-10"
+            className="absolute bottom-0 left-4 sm:left-6 md:left-10 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 z-10"
           >
-            <Image
-              src="/assets/trex_t.png"
+            <img
+              src={`/assets/dino_frame${currentFrame}.png`}
               alt="Dino"
-              width={80}
-              height={80}
-              className="w-full h-auto"
+              className="w-full h-full object-contain"
+              style={{ imageRendering: 'pixelated' }}
             />
           </div>
 
-          {/* Obstacles */}
           <div ref={obstaclesRef} className="absolute w-full h-full"></div>
         </div>
       </section>
 
-      {/* Content Section - Border acts as ground line */}
       <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent opacity-50"></div>
 
-      {/* Content Section - Independent from game section */}
       <div className="min-h-screen w-full flex flex-col lg:flex-row justify-around gap-20 items-center lg:items-center px-4 py-8 md:py-20">
-        {/* Text Content */}
         <div>
           <div className="relative mt-8 sm:mt-0 bg-no-repeat bg-contain hero-illustration w-full h-auto p-2 md:max-w-[480px]">
             <h2 className="pt-1 sm:pt-3 pl-4 text-xl sm:text-3xl font-semibold text-gray-900 dark:text-white">
@@ -320,7 +297,6 @@ export default function HomeScreen() {
               tech talks, we Dream, Dare and Do.
             </p>
 
-            {/* Social Media Links */}
             <div className="clear-both absolute bottom-1 sm:bottom-4 left-2">
               <div
                 className="flex justify-start space-x-4"
@@ -360,7 +336,6 @@ export default function HomeScreen() {
           </div>
         </div>
 
-        {/* Lego Image */}
         <div className="w-full lg:w-auto flex justify-center lg:justify-end p-4">
           <Image
             src="/assets/gdg_community.gif"
