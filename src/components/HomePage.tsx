@@ -111,7 +111,7 @@ export default function HomeScreen() {
         let safe = false;
         let leftPos = 0;
         do {
-          bottomPos = 60 + Math.random() * 30;
+          bottomPos = 120 + Math.random() * 30;
           leftPos =
             window.innerWidth - Math.random() * (window.innerWidth - 200);
           safe =

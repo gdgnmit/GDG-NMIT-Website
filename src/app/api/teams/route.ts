@@ -10,6 +10,7 @@ const standardTiers = [
   "mentor",
   "core",
   "member",
+  "recruit"
 ] as const;
 
 const allDomains = [
@@ -31,13 +32,19 @@ interface Member {
 
 type DomainStruct = {
   [key: string]: unknown;
-  member?: { past?: Member[]; recruit?: Member[] };
+  member?: { past?: Member[] };
+  recruit?: Member[];
 };
 
 function domainStruct(): DomainStruct {
-  const obj: DomainStruct = { member: { past: [], recruit: [] } };
+  const obj: DomainStruct = { 
+    member: { past: [] },
+    recruit: []
+  };
   for (const tier of standardTiers) {
-    if (tier !== "member") obj[tier] = [];
+    if (tier !== "member" && tier !== "recruit") {
+      obj[tier] = [];
+    }
   }
   return obj;
 }
@@ -61,30 +68,41 @@ function groupMembers(members: Member[]) {
 
     const normalizedTier = tier.trim().toLowerCase() as string;
 
+    // Handle special tiers
     if (normalizedTier === "past") {
       byDomain[domain].member?.past?.push(member);
     } else if (normalizedTier === "recruit") {
-      byDomain[domain].member?.recruit?.push(member);
+      byDomain[domain].recruit?.push(member);
     } else if (normalizedTier === "member") {
       byDomain[domain].member?.past?.push(member);
-    }
-
-    type Tier = (typeof standardTiers)[number];
-    if (standardTiers.includes(normalizedTier as Tier)) {
-      if (!Array.isArray(byDomain[domain][normalizedTier])) {
-        byDomain[domain][normalizedTier] = [];
+    } else {
+      // Handle standard tiers
+      type Tier = (typeof standardTiers)[number];
+      if (standardTiers.includes(normalizedTier as Tier)) {
+        if (!Array.isArray(byDomain[domain][normalizedTier])) {
+          byDomain[domain][normalizedTier] = [];
+        }
+        (byDomain[domain][normalizedTier] as Member[]).push(member);
       }
-      (byDomain[domain][normalizedTier] as Member[]).push(member);
     }
   });
 
+  // Clean up empty arrays
   for (const domain of allDomains) {
     Object.keys(byDomain[domain]).forEach((tier) => {
       if (tier === "member") {
         const memberObj = byDomain[domain].member;
-        if (memberObj?.past && memberObj.past.length === 0) delete memberObj.past;
-        if (memberObj?.recruit && memberObj.recruit.length === 0) delete memberObj.recruit;
-        if (memberObj && Object.keys(memberObj).length === 0) delete byDomain[domain].member;
+        if (memberObj?.past && memberObj.past.length === 0) {
+          delete memberObj.past;
+        }
+        if (memberObj && Object.keys(memberObj).length === 0) {
+          delete byDomain[domain].member;
+        }
+      } else if (tier === "recruit") {
+        const arr = byDomain[domain].recruit;
+        if (Array.isArray(arr) && arr.length === 0) {
+          delete byDomain[domain].recruit;
+        }
       } else {
         const arr = byDomain[domain][tier];
         if (Array.isArray(arr) && arr.length === 0) {
