@@ -3,64 +3,96 @@ import { ObjectId } from "mongodb";
 import { connectToDatabase } from "../../../lib/mongodb";
 
 const standardTiers = [
-  'faculty coordinator', 'lead', 'co-lead', 'student-advisor',
-  'mentor', 'core', 'member'
-];
+  "faculty coordinator",
+  "lead",
+  "co-lead",
+  "student-advisor",
+  "mentor",
+  "core",
+  "member",
+] as const;
 
 const allDomains = [
-  'club', 'tech', 'design', 'content and documentation',
-  'pr & marketing', 'social media', 'operations'
-];
+  "club",
+  "tech",
+  "design",
+  "content and documentation",
+  "pr & marketing",
+  "social media",
+  "operations",
+] as const;
 
-function domainStruct() {
-  const obj: any = {};
+interface Member {
+  _id: ObjectId | string;
+  domain: string;
+  tier: string;
+  [key: string]: unknown;
+}
+
+type DomainStruct = {
+  [key: string]: unknown;
+  member?: { past?: Member[]; recruit?: Member[] };
+};
+
+function domainStruct(): DomainStruct {
+  const obj: DomainStruct = { member: { past: [], recruit: [] } };
   for (const tier of standardTiers) {
-    obj[tier] = [];
+    if (tier !== "member") obj[tier] = [];
   }
-  obj["member"] = { past: [], recruit: [] };
   return obj;
 }
 
-function groupMembers(members: any[]) {
-  const byDomain: Record<string, any> = {};
+function groupMembers(members: Member[]) {
+  type ByDomain = Record<string, DomainStruct>;
+  const byDomain: ByDomain = {};
   const memberIdsByDomain: Record<string, string[]> = {};
 
-  allDomains.forEach(domain => {
+  allDomains.forEach((domain) => {
     byDomain[domain] = domainStruct();
     memberIdsByDomain[domain] = [];
   });
 
-  members.forEach(member => {
-    const domain = member.domain;
-    const tier = member.tier;
-    const _id = member._id.toString();
-
+  members.forEach((member) => {
+    const { domain, tier, _id } = member;
     if (!byDomain[domain]) return;
-    memberIdsByDomain[domain].push(_id);
 
-    if (tier === "past") {
-      byDomain[domain].member.past.push(member);
-    } else if (tier === "recruit") {
-      byDomain[domain].member.recruit.push(member);
-    } else if (tier === "member") {
-      byDomain[domain].member.past.push(member);
-    } else if (standardTiers.includes(tier)) {
-      byDomain[domain][tier].push(member);
+    const idStr = typeof _id === "string" ? _id : _id.toString();
+    memberIdsByDomain[domain].push(idStr);
+
+    const normalizedTier = tier.trim().toLowerCase() as string;
+
+    if (normalizedTier === "past") {
+      byDomain[domain].member?.past?.push(member);
+    } else if (normalizedTier === "recruit") {
+      byDomain[domain].member?.recruit?.push(member);
+    } else if (normalizedTier === "member") {
+      byDomain[domain].member?.past?.push(member);
+    }
+
+    type Tier = (typeof standardTiers)[number];
+    if (standardTiers.includes(normalizedTier as Tier)) {
+      if (!Array.isArray(byDomain[domain][normalizedTier])) {
+        byDomain[domain][normalizedTier] = [];
+      }
+      (byDomain[domain][normalizedTier] as Member[]).push(member);
     }
   });
 
   for (const domain of allDomains) {
-    Object.keys(byDomain[domain]).forEach(tier => {
+    Object.keys(byDomain[domain]).forEach((tier) => {
       if (tier === "member") {
-        if (byDomain[domain].member.past.length === 0) delete byDomain[domain].member.past;
-        if (byDomain[domain].member.recruit.length === 0) delete byDomain[domain].member.recruit;
-        if (Object.keys(byDomain[domain].member).length === 0) delete byDomain[domain].member;
+        const memberObj = byDomain[domain].member;
+        if (memberObj?.past && memberObj.past.length === 0) delete memberObj.past;
+        if (memberObj?.recruit && memberObj.recruit.length === 0) delete memberObj.recruit;
+        if (memberObj && Object.keys(memberObj).length === 0) delete byDomain[domain].member;
       } else {
-        if (Array.isArray(byDomain[domain][tier]) && byDomain[domain][tier].length === 0) {
+        const arr = byDomain[domain][tier];
+        if (Array.isArray(arr) && arr.length === 0) {
           delete byDomain[domain][tier];
         }
       }
     });
+
     if (Object.keys(byDomain[domain]).length === 0) delete byDomain[domain];
     if (memberIdsByDomain[domain].length === 0) delete memberIdsByDomain[domain];
   }
@@ -80,35 +112,32 @@ export async function GET(request: NextRequest) {
     if (!team) {
       return NextResponse.json({ error: `Team not found for year ${year}` }, { status: 404 });
     }
-    const members = await db.collection("members")
+
+    const members = await db
+      .collection<Member>("members")
       .find({ teamId: new ObjectId(team._id) })
       .toArray();
 
     const grouped = groupMembers(members);
 
     return NextResponse.json({
-      team: {
-        ...team,
-        members: grouped.memberIdsByDomain,
-      },
+      team: { ...team, members: grouped.memberIdsByDomain },
       members: grouped.members,
-      year
+      year,
     });
   }
 
   const teams = await db.collection("teams").find({}).toArray();
   const allTeamsWithMembers = await Promise.all(
     teams.map(async (team) => {
-      const members = await db.collection("members")
+      const members = await db
+        .collection<Member>("members")
         .find({ teamId: new ObjectId(team._id) })
         .toArray();
       const grouped = groupMembers(members);
 
       return {
-        team: {
-          ...team,
-          members: grouped.memberIdsByDomain,
-        },
+        team: { ...team, members: grouped.memberIdsByDomain },
         members: grouped.members,
         year: team.year,
       };
@@ -123,7 +152,7 @@ export async function POST(request: NextRequest) {
   const db = client.db();
   const teams = db.collection("teams");
 
-  const body = await request.json();
+  const body = (await request.json()) as { year?: string; name?: string };
 
   if (!body.year || !body.name) {
     return NextResponse.json({ error: "Missing required fields: year, name" }, { status: 400 });
@@ -134,10 +163,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Team for this year already exists" }, { status: 400 });
   }
 
-  const team = {
-    year: body.year,
-    name: body.name,
-  };
+  const team = { year: body.year, name: body.name };
 
   const result = await teams.insertOne(team);
   return NextResponse.json({ message: "Team created", teamId: result.insertedId.toString() });

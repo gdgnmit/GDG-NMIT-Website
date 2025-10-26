@@ -1,13 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
 
+
 import Event from '@/components/Event';
 import Loader from "@/components/Loader";
 import axios from "axios";
+import type { EventData } from '@/components/EventCard';
 
 export default function EventPage() {
   const [timerDone, setTimerDone] = useState(false);
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<EventData[]>([]);
   const [dataReady, setDataReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

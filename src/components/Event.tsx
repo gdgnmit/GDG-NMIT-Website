@@ -7,10 +7,7 @@ import React, {
   useMemo,
 } from "react";
 import { gsap } from "gsap";
-import axios from "axios";
 import EventCard, { CardConfig, EventData } from "./EventCard";
-
-// Base card configs cycle through Google brand palette in B → G → Y → R order
 const BASE_CARD_CONFIGS: CardConfig[] = [
   {
     color: { bg: "bg-[#1A73E8]", border: "border-[#1A73E8]" },
@@ -75,8 +72,10 @@ type LayoutState = {
   minHeight: number;
 };
 
+
+
 interface EventProps {
-  events: any[];
+  events: EventData[];
 }
 
 const Event: React.FC<EventProps> = ({ events }) => {
