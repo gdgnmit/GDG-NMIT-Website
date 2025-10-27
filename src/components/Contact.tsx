@@ -1,8 +1,56 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
 const Contact = () => {
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
+
+  const validatePhone = (phone: string) => {
+    const phoneRegex = /^\d{10}$/;
+    return phoneRegex.test(phone);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setPhoneError(null);
+    setMessage(null);
+
+    const form = e.currentTarget;
+    const formData = {
+      name: (form[0] as HTMLInputElement).value,
+      email: (form[1] as HTMLInputElement).value,
+      phone: (form[2] as HTMLInputElement).value,
+      message: (form[3] as HTMLTextAreaElement).value,
+    };
+
+    if (!validatePhone(formData.phone)) {
+      setPhoneError("Phone number must be exactly 10 digits.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        setMessage("Sent successfully!");
+        form.reset();
+        setTimeout(() => setMessage(null), 3000);
+      } else {
+        setMessage("Failed to send the message. Please try again.");
+      }
+    } catch (error) {
+      setMessage("An error occurred. Please try again.");
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="py-12 lg:py-16 bg-white dark:bg-g-almost-black relative overflow-hidden">
       <div className="relative z-10 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
@@ -16,12 +64,13 @@ const Contact = () => {
                 <div className="h-1 w-20 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mt-4"></div>
               </div>
 
-              <form className="space-y-4 mt-6">
+              <form className="space-y-4 mt-6" onSubmit={handleSubmit}>
                 <div className="group">
                   <input
                     type="text"
                     placeholder="Name"
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-g-gray bg-white dark:bg-black text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-g-blue focus:border-transparent transition-all duration-300"
+                    required
                   />
                 </div>
 
@@ -30,6 +79,7 @@ const Contact = () => {
                     type="email"
                     placeholder="Email"
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-g-gray bg-white dark:bg-black text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-g-blue focus:border-transparent transition-all duration-300"
+                    required
                   />
                 </div>
 
@@ -37,8 +87,13 @@ const Contact = () => {
                   <input
                     type="tel"
                     placeholder="Phone"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-g-gray bg-white dark:bg-black text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-g-blue focus:border-transparent transition-all duration-300"
+                    className={`w-full px-4 py-3 rounded-xl border ${
+                      phoneError ? "border-red-500" : "border-gray-200"
+                    } dark:border-g-gray bg-white dark:bg-black text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-g-blue focus:border-transparent transition-all duration-300`}
                   />
+                  {phoneError && (
+                    <p className="mt-1 text-red-500 font-medium">{phoneError}</p>
+                  )}
                 </div>
 
                 <div className="group">
@@ -46,16 +101,28 @@ const Contact = () => {
                     rows={4}
                     placeholder="Message"
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-g-gray bg-white dark:bg-black text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-g-blue focus:border-transparent transition-all duration-300 resize-none"
+                    required
                   ></textarea>
                 </div>
 
                 <button
                   type="submit"
+                  disabled={loading}
                   className="w-full px-6 py-3 cursor-pointer rounded-full bg-g-blue hover:bg-blue-600 text-white font-semibold transition-all duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-g-blue focus:ring-offset-2"
                 >
-                  Send Message
+                  {loading ? "Sending..." : "Send Message"}
                 </button>
               </form>
+
+              {message && (
+                <p
+                  className={`mt-4 text-center ${
+                    message.includes("successfully") ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  {message}
+                </p>
+              )}
             </div>
           </div>
 
