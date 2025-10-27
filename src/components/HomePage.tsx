@@ -343,7 +343,7 @@ export default function HomeScreen() {
 
         <div className="w-full lg:w-auto flex justify-center lg:justify-end p-4">
           <Image
-            src="/assets/gdg_community.gif"
+            src="/assets/gdg_community.webp"
             alt="GDG Community illustration"
             width={600}
             height={450}
