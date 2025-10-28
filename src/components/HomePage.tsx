@@ -17,6 +17,36 @@ const GRID_ANIMATION_DURATION = 8;
 let COLLISION_OFFSETS = { start: 120, end: 50 };
 let adjustedDuration = 5;
 
+const preloadedImages = {
+  dino1: null as HTMLImageElement | null,
+  dino2: null as HTMLImageElement | null,
+  dino3: null as HTMLImageElement | null,
+  cloud: null as HTMLImageElement | null,
+  bird: null as HTMLImageElement | null,
+  cactus: null as HTMLImageElement | null,
+};
+
+const preloadImages = () => {
+  if (typeof window === 'undefined') return;
+  
+  const imagesToPreload = [
+    { key: 'dino1', src: '/assets/dino_frame1.png' },
+    { key: 'dino2', src: '/assets/dino_frame2.png' },
+    { key: 'dino3', src: '/assets/dino_frame3.png' },
+    { key: 'cloud', src: '/assets/cloud.png' },
+    { key: 'bird', src: '/assets/bird.png' },
+    { key: 'cactus', src: '/assets/vector_light.png' },
+  ];
+
+  imagesToPreload.forEach(({ key, src }) => {
+    if (!preloadedImages[key as keyof typeof preloadedImages]) {
+      const img = new window.Image();
+      img.src = src;
+      preloadedImages[key as keyof typeof preloadedImages] = img;
+    }
+  });
+};
+
 export default function HomeScreen() {
   const dinoRef = useRef<HTMLDivElement>(null);
   const obstaclesRef = useRef<HTMLDivElement>(null);
@@ -29,11 +59,19 @@ export default function HomeScreen() {
   const idleTweenRef = useRef<gsap.core.Tween | null>(null);
   const animFrameRef = useRef<number | null>(null);
   const [currentFrame, setCurrentFrame] = useState(1);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
-  // Animate dino frames
+  // preload assets
   useEffect(() => {
+    preloadImages();
+    const timer = setTimeout(() => setImagesLoaded(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!imagesLoaded) return;
     const animateDino = () => {
-      setCurrentFrame((prev) => (prev % 3) + 1); // Cycle 1,2,3,1,2,3...
+      setCurrentFrame((prev) => (prev % 3) + 1);
       animFrameRef.current = window.setTimeout(animateDino, 100);
     };
 
@@ -44,9 +82,10 @@ export default function HomeScreen() {
         window.clearTimeout(animFrameRef.current);
       }
     };
-  }, []);
+  }, [imagesLoaded]);
 
   useEffect(() => {
+    if (!imagesLoaded) return;
     gridTweenRef.current = gsap.to(gridRef.current, {
       backgroundPosition: "200px 200px",
       duration: GRID_ANIMATION_DURATION,
@@ -54,9 +93,6 @@ export default function HomeScreen() {
       yoyo: true,
       ease: "power1.inOut",
     });
-
-    // Remove the idle bounce since we'll use CSS animation for running
-    // idleTweenRef is no longer needed for the dino
 
     const dinoJump = () => {
       if (isJumping.current || !dinoRef.current) return;
@@ -209,7 +245,7 @@ export default function HomeScreen() {
       gridTweenRef.current?.kill?.();
       gridTweenRef.current = null;
     };
-  }, []);
+  }, [imagesLoaded]);
 
   const adjustForViewport = () => {
     const viewportWidth = window.innerWidth;
@@ -240,6 +276,16 @@ export default function HomeScreen() {
 
   return (
     <main className="w-full relative">
+      {/* hidden preload images */}
+      <div className="hidden">
+        <img src="/assets/dino_frame1.png" alt="" />
+        <img src="/assets/dino_frame2.png" alt="" />
+        <img src="/assets/dino_frame3.png" alt="" />
+        <img src="/assets/cloud.png" alt="" />
+        <img src="/assets/bird.png" alt="" />
+        <img src="/assets/vector_light.png" alt="" />
+      </div>
+
       <section className="relative w-full overflow-hidden">
         <div
           ref={gridRef}
