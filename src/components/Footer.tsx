@@ -7,10 +7,10 @@ import { FaTwitter, FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa";
 
 const Footer: React.FC = () => {
   const navLinks = [
-    { name: "About Us", href: "/aboutus" },
+    { name: "About Us", href: "/about" },
     { name: "Domain", href: "/domain" },
     { name: "Events", href: "/event" },
-    { name: "Projects", href: "/projects" },
+    // { name: "Projects", href: "/projects" },
     { name: "Team", href: "/team" },
     { name: "Contact", href: "/contact" },
   ];
