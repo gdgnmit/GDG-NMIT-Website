@@ -13,9 +13,10 @@ interface NavItem {
 }
 const navItems: NavItem[] = [
   { name: "ABOUT US", path: "/about", color: "blue" },
-  { name: "EVENT", path: "/event", color: "green" },
-  { name: "TEAM", path: "/team", color: "blue" },
-  { name: "CONTACT US", path: "/contact", color: "green" },
+  { name: "UPCOMING EVENT", path: "/upcomingevent", color: "green"},
+  { name: "EVENT", path: "/event", color: "blue" },
+  { name: "TEAM", path: "/team", color: "green" },
+  { name: "CONTACT US", path: "/contact", color: "blue" },
 ];
 const colorMap: Record<string, string> = {
   blue: "hover:bg-g-blue",

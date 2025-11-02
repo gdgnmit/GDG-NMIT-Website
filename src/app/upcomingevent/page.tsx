@@ -1,0 +1,429 @@
+"use client";
+import React, { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { gsap } from "gsap";
+import Loader from "@/components/Loader";
+
+interface TimeLeft {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
+
+interface TimelineEvent {
+  time: string;
+  title: string;
+  description: string;
+  location: string;
+}
+
+export default function UpcomingEventPage() {
+  const [timerDone, setTimerDone] = useState(false);
+  const [dataReady, setDataReady] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+
+  // Target date: November 21, 2025, 10:00 AM
+  const targetDate = new Date("2025-11-21T10:00:00").getTime();
+
+  useEffect(() => {
+    setTimerDone(true);
+    setDataReady(true);
+  }, []);
+
+  useEffect(() => {
+    const calculateTimeLeft = (): TimeLeft => {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference > 0) {
+        return {
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((difference % (1000 * 60)) / 1000),
+        };
+      }
+      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    };
+
+    setTimeLeft(calculateTimeLeft());
+    const interval = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [targetDate]);
+
+  const isReady = timerDone && dataReady;
+
+  useEffect(() => {
+    if (!titleRef.current || !isReady) return;
+
+    const element = titleRef.current;
+    const originalText = "PROJECT DECRYPT '25";
+    let iteration = 0;
+
+    const interval = setInterval(() => {
+      const animatedText = originalText
+        .split("")
+        .map((letter, index) => {
+          if (letter === " ") return letter;
+          if (index < iteration) {
+            return originalText[index];
+          }
+          return chars[Math.floor(Math.random() * chars.length)];
+        })
+        .join("");
+
+      element.textContent = animatedText;
+
+      if (iteration >= originalText.length) {
+        clearInterval(interval);
+      }
+
+      iteration += 1 / 5;
+    }, 50);
+
+    return () => clearInterval(interval);
+  }, [isReady, chars]);
+
+  if (!isReady) {
+    return <Loader className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />;
+  }
+
+  const sponsors = [
+    { name: "Sponsor 1", logo: "/jetbrains.png" },
+  ];
+
+  const timelineEvents: TimelineEvent[] = [
+    {
+      time: "9:00 AM - 10:00 AM",
+      title: "Registration & Setup",
+      description: "Get checked in and set up your workspace for the day ahead.",
+      location: "Main Lobby, NMIT Campus",
+    },
+    {
+      time: "10:00 AM - 10:30 AM",
+      title: "Inauguration Ceremony",
+      description: "Welcome address and event kickoff with keynote speakers.",
+      location: "APJ Abdul Kalam Auditorium",
+    },
+    {
+      time: "10:45 AM - 12:45 PM",
+      title: "Round 1 - Code in the Dark (Part 1)",
+      description: "First phase of the coding challenge spanning 2 hours. Test your skills on our Personalized IDE Platform.",
+      location: "5 Computer Labs",
+    },
+    {
+      time: "12:45 PM - 1:45 PM",
+      title: "Lunch Break + Networking Session",
+      description: "Enjoy vegetarian meals at the College Mess and network with fellow participants. Powered by Predator Energy.",
+      location: "College Mess & Common Area",
+    },
+    {
+      time: "1:45 PM - 4:45 PM",
+      title: "Round 1 - Code in the Dark (Part 2)",
+      description: "Continue the challenge with 3 more hours of intense coding competition.",
+      location: "5 Computer Labs",
+    },
+    {
+      time: "5:00 PM - 6:30 PM",
+      title: "Round 2 - Bitwise Puzzle Sprint",
+      description: "Individual challenge featuring bitwise puzzles. Compete on the HackerRank Platform for 1.5 hours.",
+      location: "Online Platform (HackerRank)",
+    },
+    {
+      time: "6:30 PM - 7:00 PM",
+      title: "Final Evaluation & Deliberation",
+      description: "Judges evaluate submissions and deliberate on the winners.",
+      location: "Judges Panel",
+    },
+    {
+      time: "7:00 PM - 7:30 PM",
+      title: "Closing Ceremony & Prize Distribution",
+      description: "Celebrate the winners and close the event with prize distribution and closing remarks.",
+      location: "Auditorium",
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-white dark:bg-g-almost-black">
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 bg-black">
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+                          linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)`,
+          backgroundSize: '40px 40px'
+        }}></div>
+
+        {/* Floating decorative elements */}
+        <div className="absolute top-20 left-10 w-20 h-20 bg-g-blue/20 rounded-full blur-xl animate-float-slow hidden lg:block"></div>
+        <div className="absolute bottom-20 right-10 w-32 h-32 bg-g-green/20 rounded-full blur-xl animate-float-fast hidden lg:block"></div>
+        <div className="absolute top-1/2 right-20 w-24 h-24 bg-g-yellow/20 rounded-full blur-xl animate-float-slow hidden lg:block"></div>
+
+        {/* Main Content - Centered Event Name */}
+        <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-4rem)]">
+          <div className="text-center">
+            <motion.div
+              initial={{ opacity: 0, y: -30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="space-y-6"
+            >
+              <h1 
+                ref={titleRef}
+                className="text-5xl sm:text-6xl md:text-5xl lg:text-7xl font-bold leading-tight font-mono text-white"
+                style={{ letterSpacing: '0.05em' }}
+              >
+                PROJECT DECRYPT '25
+              </h1>
+              <div className="h-1 w-32 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mx-auto"></div>
+              <p className="text-xl sm:text-2xl md:text-3xl text-gray-300 max-w-3xl mx-auto font-medium leading-relaxed pt-4">
+                Get ready to unlock innovation and showcase your coding prowess
+              </p>
+            </motion.div>
+
+            {/* CTA Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+              className="pt-8"
+            >
+              {/* <motion.a
+                href="#"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-block bg-white/10 backdrop-blur-sm border-2 border-white/20 text-white font-bold px-6 py-3 sm:px-8 sm:py-4 rounded-xl shadow-lg hover:shadow-2xl hover:bg-white/20 transition-all duration-300 text-base sm:text-lg"
+              >
+                Register Now
+              </motion.a> */}
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Countdown Section */}
+      <section className="bg-white dark:bg-g-almost-black py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+              Event Starts In
+            </h2>
+            <div className="h-1 w-20 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mx-auto mt-2 mb-12"></div>
+            
+            <div className="flex justify-center gap-4 sm:gap-6 md:gap-8">
+              {[
+                { label: "Days", value: timeLeft.days },
+                { label: "Hours", value: timeLeft.hours },
+                { label: "Minutes", value: timeLeft.minutes },
+                { label: "Seconds", value: timeLeft.seconds },
+              ].map((item, index) => (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 sm:p-8 md:p-10 min-w-[90px] sm:min-w-[110px] md:min-w-[130px] border border-gray-200 dark:border-gray-700"
+                >
+                  <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-br from-g-blue to-g-green bg-clip-text text-transparent mb-3">
+                    {String(item.value).padStart(2, "0")}
+                  </div>
+                  <div className="text-sm sm:text-base text-gray-600 dark:text-gray-400 uppercase tracking-wider font-semibold">
+                    {item.label}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Timeline Section */}
+      <section className="bg-white dark:bg-g-almost-black py-12 lg:py-16">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-12"
+          >
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+              Event Timeline
+            </h2>
+            <div className="h-1 w-20 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mt-2"></div>
+            <p className="mt-6 text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
+              A day filled with coding challenges, networking, and innovation
+            </p>
+          </motion.div>
+
+          {/* Timeline Component */}
+          <div className="relative py-8">
+            <div className="max-w-5xl mx-auto relative">
+              {/* Timeline Line - Desktop */}
+              <div className="hidden md:block absolute left-1/2 top-0 bottom-0 transform -translate-x-1/2 w-1 shadow-lg" style={{ 
+                height: '100%',
+                background: 'linear-gradient(to bottom, #4285F4 0%, #EA4335 33%, #FBBC04 66%, #34A853 100%)'
+              }} />
+
+              {/* Timeline Container */}
+              <div className="relative">
+                {timelineEvents.map((event, index) => {
+                  const isEven = index % 2 === 0;
+                  const isLeft = isEven;
+                  const isLast = index === timelineEvents.length - 1;
+
+                  return (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-100px" }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className={`relative mb-10 md:mb-12 ${
+                        isLeft
+                          ? "md:pr-[calc(50%+2rem)] md:pl-0 md:text-right"
+                          : "md:pl-[calc(50%+2rem)] md:pr-0 md:text-left"
+                      }`}
+                    >
+                      {/* Timeline Node - Desktop */}
+                      <div className="hidden md:block absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 z-10">
+                        <div className="absolute inset-0 bg-gradient-to-r from-g-blue to-g-green rounded-full shadow-lg animate-pulse" />
+                        <div className="absolute inset-1 bg-white dark:bg-g-almost-black rounded-full" />
+                        <div className="absolute inset-2 bg-gradient-to-r from-g-blue to-g-green rounded-full" />
+                      </div>
+
+                      {/* Timeline Node - Mobile */}
+                      <div className="md:hidden absolute left-0 top-6 w-4 h-4 -ml-2 z-10">
+                        <div className="absolute inset-0 bg-gradient-to-r from-g-blue to-g-green rounded-full shadow-lg" />
+                        <div className="absolute inset-1 bg-white dark:bg-g-almost-black rounded-full" />
+                      </div>
+
+                      {/* Timeline Line - Mobile (only if not last) */}
+                      {!isLast && (
+                        <div className="md:hidden absolute left-0 top-10 bottom-0 w-0.5 -ml-[1px]" style={{
+                          background: 'linear-gradient(to bottom, #4285F4 0%, #EA4335 33%, #FBBC04 66%, #34A853 100%)'
+                        }} />
+                      )}
+
+                      {/* Event Card */}
+                      <div
+                        className={`relative ${
+                          isLeft ? "md:mr-8" : "md:ml-8"
+                        } bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 p-6 border border-gray-200 dark:border-gray-700`}
+                      >
+                        {/* Time Badge */}
+                        <div className="inline-block mb-3 px-4 py-1.5 bg-gradient-to-r from-g-blue to-g-green text-white text-sm font-bold rounded-full shadow-sm">
+                          {event.time}
+                        </div>
+
+                        {/* Event Title */}
+                        <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                          {event.title}
+                        </h3>
+
+                        {/* Description */}
+                        <p className="text-base text-gray-600 dark:text-gray-300 leading-relaxed">
+                          {event.description}
+                        </p>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Sponsors Section */}
+      <section className="bg-white dark:bg-g-almost-black py-12 lg:py-16 mb-20">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-12"
+          >
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+              Our Sponsors
+            </h2>
+            <div className="h-1 w-20 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mt-2"></div>
+            <p className="mt-6 text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
+              Powered by our amazing partners
+            </p>
+          </motion.div>
+
+          <div className="flex justify-center flex-wrap gap-6 md:gap-8">
+            {sponsors.map((sponsor, index) => (
+              <motion.div
+                key={sponsor.name}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+                className="bg-white dark:bg-gray-800 rounded-xl p-6 md:p-8 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700"
+              >
+                <div className="flex justify-center items-center">
+                  <img
+                    src={sponsor.logo}
+                    alt={sponsor.name}
+                    className="object-contain filter hover:brightness-110 transition-all duration-300 max-h-16 md:max-h-20 w-auto"
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      {/* <section className="bg-white dark:bg-g-almost-black py-12 lg:py-16">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-gradient-to-r from-g-blue to-g-green rounded-2xl p-8 md:p-12 shadow-lg"
+          >
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
+              Ready to Decrypt Innovation?
+            </h3>
+            <p className="text-lg sm:text-xl text-white/90 mb-8">
+              Join us for an unforgettable coding experience
+            </p>
+            <motion.a
+              href="#"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-block bg-white text-g-blue font-bold px-8 py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+          >
+            Register Now
+            </motion.a>
+          </motion.div>
+        </div>
+      </section> */}
+    </div>
+  );
+}
