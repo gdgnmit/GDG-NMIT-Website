@@ -14,7 +14,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { name: "ABOUT US", path: "/about", color: "blue" },
   { name: "UPCOMING EVENT", path: "/upcomingevent", color: "green"},
-  { name: "EVENT", path: "/event", color: "blue" },
+  { name: "EVENTS", path: "/event", color: "blue" },
   { name: "TEAM", path: "/team", color: "green" },
   { name: "CONTACT US", path: "/contact", color: "blue" },
 ];

@@ -23,8 +23,8 @@ export default function Home() {
         <>
           <HomePage />
           <WhatWeDo />
-          <Domain />
           <UpcomingEvent />
+          <Domain />
           <ContactUsHome />
         </>
       )}

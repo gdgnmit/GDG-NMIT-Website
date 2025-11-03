@@ -174,7 +174,7 @@ export default function UpcomingEventPage() {
                     className="text-5xl sm:text-6xl md:text-5xl lg:text-7xl font-bold leading-tight font-mono text-white"
                     style={{ letterSpacing: '0.02em' }}
                   >
-                    PROJECT DECRYPT '25
+                    PROJECT DECRYPT &#39;25
                   </h1>
                   <p className="text-xl sm:text-2xl md:text-3xl text-gray-300 max-w-xl mx-auto font-medium leading-relaxed pt-4">
                     Get ready to unlock innovation and showcase your coding skills
