@@ -20,6 +20,7 @@ interface TimelineEvent {
 
 export default function UpcomingEventPage() {
   const [timerDone, setTimerDone] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [dataReady, setDataReady] = useState(false);
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
@@ -34,8 +35,12 @@ export default function UpcomingEventPage() {
   const targetDate = new Date("2025-11-21T10:00:00").getTime();
 
   useEffect(() => {
-    setTimerDone(true);
-    setDataReady(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      setTimerDone(true);
+      setDataReady(true);
+    }, 3500);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -95,10 +100,6 @@ export default function UpcomingEventPage() {
     return () => clearInterval(interval);
   }, [isReady, chars]);
 
-  if (!isReady) {
-    return <Loader className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />;
-  }
-
   const sponsors = [
     { name: "Sponsor 1", logo: "/jetbrains.png" },
   ];
@@ -154,251 +155,199 @@ export default function UpcomingEventPage() {
     },
   ];
 
+  // if (!isReady) {
+  //   return <Loader className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />;
+  // }
+
   return (
-    <div className="min-h-screen bg-white dark:bg-g-almost-black">
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 bg-black">
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 opacity-10" style={{
-          backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
-                          linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)`,
-          backgroundSize: '40px 40px'
-        }}></div>
+    <>
+      {isLoading ? (
+        <Loader className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />
+      ) : (
+        <div className="min-h-screen bg-white dark:bg-g-almost-black">
+          {/* Hero Section */}
+          <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 bg-g-almost-black">
 
-        {/* Floating decorative elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 bg-g-blue/20 rounded-full blur-xl animate-float-slow hidden lg:block"></div>
-        <div className="absolute bottom-20 right-10 w-32 h-32 bg-g-green/20 rounded-full blur-xl animate-float-fast hidden lg:block"></div>
-        <div className="absolute top-1/2 right-20 w-24 h-24 bg-g-yellow/20 rounded-full blur-xl animate-float-slow hidden lg:block"></div>
+            {/* Main Content - Centered Event Name */}
+            <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-4rem)]">
+              <div className="text-center">
+                <motion.div
+                  initial={{ opacity: 0, y: -30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  className="space-y-6"
+                >
+                  <h1
+                    ref={titleRef}
+                    className="text-5xl sm:text-6xl md:text-5xl lg:text-7xl font-bold leading-tight font-mono text-white"
+                    style={{ letterSpacing: '0.02em' }}
+                  >
+                    PROJECT DECRYPT '25
+                  </h1>
+                  <p className="text-xl sm:text-2xl md:text-3xl text-gray-300 max-w-xl mx-auto font-medium leading-relaxed pt-4">
+                    Get ready to unlock innovation and showcase your coding skills
+                  </p>
+                </motion.div>
 
-        {/* Main Content - Centered Event Name */}
-        <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-4rem)]">
-          <div className="text-center">
-            <motion.div
-              initial={{ opacity: 0, y: -30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="space-y-6"
-            >
-              <h1 
-                ref={titleRef}
-                className="text-5xl sm:text-6xl md:text-5xl lg:text-7xl font-bold leading-tight font-mono text-white"
-                style={{ letterSpacing: '0.05em' }}
-              >
-                PROJECT DECRYPT '25
-              </h1>
-              <div className="h-1 w-32 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mx-auto"></div>
-              <p className="text-xl sm:text-2xl md:text-3xl text-gray-300 max-w-3xl mx-auto font-medium leading-relaxed pt-4">
-                Get ready to unlock innovation and showcase your coding prowess
-              </p>
-            </motion.div>
-
-            {/* CTA Button */}
-            <motion.div
+                {/* CTA Button */}
+                {/* <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
               className="pt-8"
             >
-              {/* <motion.a
+              <motion.a
                 href="#"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 className="inline-block bg-white/10 backdrop-blur-sm border-2 border-white/20 text-white font-bold px-6 py-3 sm:px-8 sm:py-4 rounded-xl shadow-lg hover:shadow-2xl hover:bg-white/20 transition-all duration-300 text-base sm:text-lg"
               >
                 Register Now
-              </motion.a> */}
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Countdown Section */}
-      <section className="bg-white dark:bg-g-almost-black py-16 lg:py-20">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
-          >
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Event Starts In
-            </h2>
-            <div className="h-1 w-20 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mx-auto mt-2 mb-12"></div>
-            
-            <div className="flex justify-center gap-4 sm:gap-6 md:gap-8">
-              {[
-                { label: "Days", value: timeLeft.days },
-                { label: "Hours", value: timeLeft.hours },
-                { label: "Minutes", value: timeLeft.minutes },
-                { label: "Seconds", value: timeLeft.seconds },
-              ].map((item, index) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 sm:p-8 md:p-10 min-w-[90px] sm:min-w-[110px] md:min-w-[130px] border border-gray-200 dark:border-gray-700"
-                >
-                  <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-br from-g-blue to-g-green bg-clip-text text-transparent mb-3">
-                    {String(item.value).padStart(2, "0")}
-                  </div>
-                  <div className="text-sm sm:text-base text-gray-600 dark:text-gray-400 uppercase tracking-wider font-semibold">
-                    {item.label}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Timeline Section */}
-      <section className="bg-white dark:bg-g-almost-black py-12 lg:py-16">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-12"
-          >
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Event Timeline
-            </h2>
-            <div className="h-1 w-20 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mt-2"></div>
-            <p className="mt-6 text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
-              A day filled with coding challenges, networking, and innovation
-            </p>
-          </motion.div>
-
-          {/* Timeline Component */}
-          <div className="relative py-8">
-            <div className="max-w-5xl mx-auto relative">
-              {/* Timeline Line - Desktop */}
-              <div className="hidden md:block absolute left-1/2 top-0 bottom-0 transform -translate-x-1/2 w-1 shadow-lg" style={{ 
-                height: '100%',
-                background: 'linear-gradient(to bottom, #4285F4 0%, #EA4335 33%, #FBBC04 66%, #34A853 100%)'
-              }} />
-
-              {/* Timeline Container */}
-              <div className="relative">
-                {timelineEvents.map((event, index) => {
-                  const isEven = index % 2 === 0;
-                  const isLeft = isEven;
-                  const isLast = index === timelineEvents.length - 1;
-
-                  return (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-100px" }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                      className={`relative mb-10 md:mb-12 ${
-                        isLeft
-                          ? "md:pr-[calc(50%+2rem)] md:pl-0 md:text-right"
-                          : "md:pl-[calc(50%+2rem)] md:pr-0 md:text-left"
-                      }`}
-                    >
-                      {/* Timeline Node - Desktop */}
-                      <div className="hidden md:block absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 z-10">
-                        <div className="absolute inset-0 bg-gradient-to-r from-g-blue to-g-green rounded-full shadow-lg animate-pulse" />
-                        <div className="absolute inset-1 bg-white dark:bg-g-almost-black rounded-full" />
-                        <div className="absolute inset-2 bg-gradient-to-r from-g-blue to-g-green rounded-full" />
-                      </div>
-
-                      {/* Timeline Node - Mobile */}
-                      <div className="md:hidden absolute left-0 top-6 w-4 h-4 -ml-2 z-10">
-                        <div className="absolute inset-0 bg-gradient-to-r from-g-blue to-g-green rounded-full shadow-lg" />
-                        <div className="absolute inset-1 bg-white dark:bg-g-almost-black rounded-full" />
-                      </div>
-
-                      {/* Timeline Line - Mobile (only if not last) */}
-                      {!isLast && (
-                        <div className="md:hidden absolute left-0 top-10 bottom-0 w-0.5 -ml-[1px]" style={{
-                          background: 'linear-gradient(to bottom, #4285F4 0%, #EA4335 33%, #FBBC04 66%, #34A853 100%)'
-                        }} />
-                      )}
-
-                      {/* Event Card */}
-                      <div
-                        className={`relative ${
-                          isLeft ? "md:mr-8" : "md:ml-8"
-                        } bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 p-6 border border-gray-200 dark:border-gray-700`}
-                      >
-                        {/* Time Badge */}
-                        <div className="inline-block mb-3 px-4 py-1.5 bg-gradient-to-r from-g-blue to-g-green text-white text-sm font-bold rounded-full shadow-sm">
-                          {event.time}
-                        </div>
-
-                        {/* Event Title */}
-                        <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3">
-                          {event.title}
-                        </h3>
-
-                        {/* Description */}
-                        <p className="text-base text-gray-600 dark:text-gray-300 leading-relaxed">
-                          {event.description}
-                        </p>
-                      </div>
-                    </motion.div>
-                  );
-                })}
+              </motion.a>
+            </motion.div> */}
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      {/* Sponsors Section */}
-      <section className="bg-white dark:bg-g-almost-black py-12 lg:py-16 mb-20">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-12"
-          >
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Our Sponsors
-            </h2>
-            <div className="h-1 w-20 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mt-2"></div>
-            <p className="mt-6 text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
-              Powered by our amazing partners
-            </p>
-          </motion.div>
+          {/* Countdown Section */}
+          <section className="bg-white dark:bg-g-almost-black py-16 lg:py-20 -mt-10 mb-12">
+            <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+              <div className="text-center">
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                  Event Starts In
+                </h2>
+                <div className="h-1 w-20 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mx-auto mt-2 mb-12"></div>
 
-          <div className="flex justify-center flex-wrap gap-6 md:gap-8">
-            {sponsors.map((sponsor, index) => (
-              <motion.div
-                key={sponsor.name}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                className="bg-white dark:bg-gray-800 rounded-xl p-6 md:p-8 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700"
-              >
-                <div className="flex justify-center items-center">
-                  <img
-                    src={sponsor.logo}
-                    alt={sponsor.name}
-                    className="object-contain filter hover:brightness-110 transition-all duration-300 max-h-16 md:max-h-20 w-auto"
-                  />
+                <div className="flex justify-center">
+                  <div
+                    className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold font-mono tabular-nums tracking-tight leading-none bg-clip-text text-transparent"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(to right, #4285F4 0%, #EA4335 33%, #FBBC04 66%, #34A853 100%)",
+                      WebkitBackgroundClip: "text",
+                    }}
+                  >
+                    {`${String(timeLeft.days).padStart(2, "0")}:${String(timeLeft.hours).padStart(2, "0")}:${String(timeLeft.minutes).padStart(2, "0")}:${String(timeLeft.seconds).padStart(2, "0")}`}
+                  </div>
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+              </div>
+            </div>
+          </section>
 
-      {/* Call to Action */}
-      {/* <section className="bg-white dark:bg-g-almost-black py-12 lg:py-16">
+          {/* Timeline Section */}
+          <section className="bg-white dark:bg-g-almost-black py-12 lg:py-16">
+            <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                Event Timeline
+              </h2>
+              <div className="h-1 w-20 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mt-2"></div>
+              <p className="mt-6 text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mb-4">
+                A day filled with coding challenges, networking, and innovation
+              </p>
+
+              {/* Timeline Component */}
+              <div className="relative py-8">
+                <div className="max-w-5xl mx-auto relative">
+                  {/* Timeline Line - Desktop */}
+                  <div className="hidden md:block absolute left-1/2 top-0 bottom-0 transform -translate-x-1/2 w-1 shadow-lg" style={{
+                    height: '100%',
+                    background: 'linear-gradient(to bottom, #4285F4 0%, #EA4335 33%, #FBBC04 66%, #34A853 100%)'
+                  }} />
+
+                  {/* Timeline Container */}
+                  <div className="relative">
+                    {timelineEvents.map((event, index) => {
+                      const isEven = index % 2 === 0;
+                      const isLeft = isEven;
+                      const isLast = index === timelineEvents.length - 1;
+
+                      return (
+                        <div
+                          key={index}
+                          className={`relative mb-10 md:mb-12 ${isLeft
+                            ? "md:pr-[calc(50%+2rem)] md:pl-0 md:text-right"
+                            : "md:pl-[calc(50%+2rem)] md:pr-0 md:text-left"
+                            }`}
+                        >
+                          {/* Timeline Node - Desktop */}
+                          <div className="hidden md:block absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 z-10">
+                            <div className="absolute inset-0 bg-gradient-to-r from-g-blue to-g-green rounded-full shadow-lg animate-pulse" />
+                            <div className="absolute inset-1 bg-white dark:bg-g-almost-black rounded-full" />
+                            <div className="absolute inset-2 bg-gradient-to-r from-g-blue to-g-green rounded-full" />
+                          </div>
+
+                          {/* Timeline Node - Mobile */}
+                          <div className="md:hidden absolute left-0 top-6 w-4 h-4 -ml-2 z-10">
+                            <div className="absolute inset-0 bg-gradient-to-r from-g-blue to-g-green rounded-full shadow-lg" />
+                            <div className="absolute inset-1 bg-white dark:bg-g-almost-black rounded-full" />
+                          </div>
+
+                          {/* Timeline Line - Mobile (only if not last) */}
+                          {!isLast && (
+                            <div className="md:hidden absolute left-0 top-10 bottom-0 w-0.5 -ml-[1px]" style={{
+                              background: 'linear-gradient(to bottom, #4285F4 0%, #EA4335 33%, #FBBC04 66%, #34A853 100%)'
+                            }} />
+                          )}
+
+                          {/* Event Card */}
+                          <div
+                            className={`relative ${isLeft ? "md:mr-8" : "md:ml-8"} rounded-xl p-6 transition-all duration-300 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.25)] hover:shadow-[0_18px_40px_-12px_rgba(59,130,246,0.28),0_-14px_30px_-16px_rgba(59,130,246,0.24),14px_0_28px_-16px_rgba(59,130,246,0.22),-14px_0_28px_-16px_rgba(59,130,246,0.22)] border border-gray-200/60 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl hover:ring-1 hover:ring-blue-500/30`}
+                          >
+                            {/* Time Badge */}
+                            <div className="inline-block mb-3 px-4 py-1.5 bg-gradient-to-r from-g-blue to-g-green text-white text-sm font-bold rounded-full shadow-sm">
+                              {event.time}
+                            </div>
+
+                            {/* Event Title */}
+                            <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                              {event.title}
+                            </h3>
+
+                            {/* Description */}
+                            <p className="text-base text-gray-600 dark:text-gray-300 leading-relaxed">
+                              {event.description}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Sponsors Section */}
+          <section className="bg-white dark:bg-g-almost-black py-12 lg:py-16 mb-20">
+            <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+              <div className="mb-12">
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                  Our Sponsors
+                </h2>
+                <div className="h-1 w-20 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mt-2"></div>
+              </div>
+
+              <div className="flex justify-center flex-wrap gap-6 md:gap-8">
+                {sponsors.map((sponsor, index) => (
+                  <div
+                    key={sponsor.name}
+                    className="bg-white dark:bg-gray-700 rounded-xl p-6 md:p-8 shadow-md transition-all duration-300 border border-gray-200 dark:border-gray-700"
+                  >
+                    <div className="flex justify-center items-center">
+                      <img
+                        src={sponsor.logo}
+                        alt={sponsor.name}
+                        className="object-contain transition-all duration-300 max-h-16 md:max-h-20 w-auto"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Call to Action */}
+          {/* <section className="bg-white dark:bg-g-almost-black py-12 lg:py-16">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -424,6 +373,8 @@ export default function UpcomingEventPage() {
           </motion.div>
         </div>
       </section> */}
-    </div>
+        </div>
+      )}
+    </>
   );
 }

@@ -5,6 +5,7 @@ import Domain from "@/components/Domain";
 import ContactUsHome from "@/components/ContactUsHome";
 import WhatWeDo from "@/components/WhatWeDo";
 import Loader from "@/components/Loader";
+import UpcomingEvent from "@/components/UpcomingEvent";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,6 +24,7 @@ export default function Home() {
           <HomePage />
           <WhatWeDo />
           <Domain />
+          <UpcomingEvent />
           <ContactUsHome />
         </>
       )}
