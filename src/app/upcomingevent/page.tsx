@@ -99,8 +99,8 @@ export default function UpcomingEventPage() {
   }, [isReady, chars]);
 
   const sponsors = [
-    { name: "JetBrains", logo: "/jetbrains.png", link: "https://www.jetbrains.com",copyright: "Copyright c2025 JetBrains s.r.o. JetBrains and the JetBrains logo are trademarks of JetBrains s.r.o." },
-    { name: "Unstop", logo:"/unstop.png", link: "https://unstop.com",},
+    { name: "JetBrains", logo: "/jetbrains.png", link: "https://www.jetbrains.com", copyright: "Copyright c2025 JetBrains s.r.o. JetBrains and the JetBrains logo are trademarks of JetBrains s.r.o." },
+    { name: "Unstop", logo: "/unstop.png", link: "https://unstop.com", },
   ];
 
   const timelineEvents: TimelineEvent[] = [
@@ -159,8 +159,8 @@ export default function UpcomingEventPage() {
       {isLoading ? (
         <Loader className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />
       ) : (
-        <div className="min-h-screen bg-white dark:bg-g-almost-black">  
-          <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 bg-g-almost-black">
+        <div className="min-h-screen bg-white dark:bg-g-almost-black">
+          <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 dark:bg-g-almost-black">
             <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-4rem)]">
               <div className="text-center">
                 <motion.div
@@ -171,12 +171,13 @@ export default function UpcomingEventPage() {
                 >
                   <h1
                     ref={titleRef}
-                    className="text-5xl sm:text-6xl md:text-5xl lg:text-7xl font-bold leading-tight font-mono text-white"
+                    className="text-5xl sm:text-6xl md:text-5xl lg:text-7xl font-bold leading-tight font-mono dark:text-white text-transparent bg-clip-text bg-gradient-to-r from-g-blue via-g-red to-g-yellow dark:bg-none"
                     style={{ letterSpacing: '0.02em' }}
                   >
                     PROJECT DECRYPT &#39;25
                   </h1>
-                  <p className="text-xl sm:text-2xl md:text-3xl text-gray-300 max-w-xl mx-auto font-medium leading-relaxed pt-4">
+
+                  <p className="text-xl sm:text-2xl md:text-3xl dark:text-gray-300 max-w-xl mx-auto font-medium leading-relaxed pt-4">
                     Get ready to unlock innovation and showcase your coding skills
                   </p>
                 </motion.div>
@@ -218,7 +219,7 @@ export default function UpcomingEventPage() {
                 A day filled with coding challenges, networking, and innovation
               </p>
 
-              
+
               <div className="relative py-8">
                 <div className="max-w-5xl mx-auto relative">
                   <div className="hidden md:block absolute left-1/2 top-0 bottom-0 transform -translate-x-1/2 w-1 shadow-lg" style={{
@@ -315,7 +316,7 @@ export default function UpcomingEventPage() {
                   </div>
                 ))}
               </div>
-          </div>
+            </div>
           </section>
 
         </div>
