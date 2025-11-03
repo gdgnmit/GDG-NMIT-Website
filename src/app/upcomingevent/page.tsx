@@ -30,8 +30,6 @@ export default function UpcomingEventPage() {
   });
   const titleRef = useRef<HTMLHeadingElement>(null);
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
-
-  // Target date: November 21, 2025, 10:00 AM
   const targetDate = new Date("2025-11-21T10:00:00").getTime();
 
   useEffect(() => {
@@ -156,20 +154,13 @@ export default function UpcomingEventPage() {
     },
   ];
 
-  // if (!isReady) {
-  //   return <Loader className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />;
-  // }
-
   return (
     <>
       {isLoading ? (
         <Loader className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />
       ) : (
-        <div className="min-h-screen bg-white dark:bg-g-almost-black">
-          {/* Hero Section */}
+        <div className="min-h-screen bg-white dark:bg-g-almost-black">  
           <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 bg-g-almost-black">
-
-            {/* Main Content - Centered Event Name */}
             <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-4rem)]">
               <div className="text-center">
                 <motion.div
@@ -189,28 +180,10 @@ export default function UpcomingEventPage() {
                     Get ready to unlock innovation and showcase your coding skills
                   </p>
                 </motion.div>
-
-                {/* CTA Button */}
-                {/* <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-              className="pt-8"
-            >
-              <motion.a
-                href="#"
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-block bg-white/10 backdrop-blur-sm border-2 border-white/20 text-white font-bold px-6 py-3 sm:px-8 sm:py-4 rounded-xl shadow-lg hover:shadow-2xl hover:bg-white/20 transition-all duration-300 text-base sm:text-lg"
-              >
-                Register Now
-              </motion.a>
-            </motion.div> */}
               </div>
             </div>
           </section>
 
-          {/* Countdown Section */}
           <section className="bg-white dark:bg-g-almost-black py-16 lg:py-20 -mt-10 mb-12">
             <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
               <div className="text-center">
@@ -235,7 +208,6 @@ export default function UpcomingEventPage() {
             </div>
           </section>
 
-          {/* Timeline Section */}
           <section className="bg-white dark:bg-g-almost-black py-12 lg:py-16">
             <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -246,16 +218,13 @@ export default function UpcomingEventPage() {
                 A day filled with coding challenges, networking, and innovation
               </p>
 
-              {/* Timeline Component */}
+              
               <div className="relative py-8">
                 <div className="max-w-5xl mx-auto relative">
-                  {/* Timeline Line - Desktop */}
                   <div className="hidden md:block absolute left-1/2 top-0 bottom-0 transform -translate-x-1/2 w-1 shadow-lg" style={{
                     height: '100%',
                     background: 'linear-gradient(to bottom, #4285F4 0%, #EA4335 33%, #FBBC04 66%, #34A853 100%)'
                   }} />
-
-                  {/* Timeline Container */}
                   <div className="relative">
                     {timelineEvents.map((event, index) => {
                       const isEven = index % 2 === 0;
@@ -349,33 +318,6 @@ export default function UpcomingEventPage() {
           </div>
           </section>
 
-          {/* Call to Action */}
-          {/* <section className="bg-white dark:bg-g-almost-black py-12 lg:py-16">
-        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="bg-gradient-to-r from-g-blue to-g-green rounded-2xl p-8 md:p-12 shadow-lg"
-          >
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
-              Ready to Decrypt Innovation?
-            </h3>
-            <p className="text-lg sm:text-xl text-white/90 mb-8">
-              Join us for an unforgettable coding experience
-            </p>
-            <motion.a
-              href="#"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-block bg-white text-g-blue font-bold px-8 py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
-          >
-            Register Now
-            </motion.a>
-          </motion.div>
-        </div>
-      </section> */}
         </div>
       )}
     </>
