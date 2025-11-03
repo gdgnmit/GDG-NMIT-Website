@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { gsap } from "gsap";
 import Loader from "@/components/Loader";
+import Link from "next/link";
 
 interface TimeLeft {
   days: number;
@@ -101,7 +101,8 @@ export default function UpcomingEventPage() {
   }, [isReady, chars]);
 
   const sponsors = [
-    { name: "Sponsor 1", logo: "/jetbrains.png" },
+    { name: "JetBrains", logo: "/jetbrains.png", link: "https://www.jetbrains.com",copyright: "Copyright c2025 JetBrains s.r.o. JetBrains and the JetBrains logo are trademarks of JetBrains s.r.o." },
+    { name: "Unstop", logo:"/unstop.png", link: "https://unstop.com",},
   ];
 
   const timelineEvents: TimelineEvent[] = [
@@ -331,19 +332,21 @@ export default function UpcomingEventPage() {
                 {sponsors.map((sponsor, index) => (
                   <div
                     key={sponsor.name}
-                    className="bg-white dark:bg-gray-700 rounded-xl p-6 md:p-8 shadow-md transition-all duration-300 border border-gray-200 dark:border-gray-700"
+                    className="bg-white dark:bg-white rounded-xl p-6 md:p-8 shadow-md transition-all duration-300 border border-gray-200 dark:border-gray-700"
                   >
                     <div className="flex justify-center items-center">
-                      <img
-                        src={sponsor.logo}
-                        alt={sponsor.name}
-                        className="object-contain transition-all duration-300 max-h-16 md:max-h-20 w-auto"
-                      />
+                      <Link href={sponsor.link} target="_blank">
+                        <img
+                          src={sponsor.logo}
+                          alt={sponsor.name}
+                          className="object-contain transition-all duration-300 max-h-16 md:max-h-20 w-auto"
+                        />
+                      </Link>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
+          </div>
           </section>
 
           {/* Call to Action */}
