@@ -68,10 +68,10 @@ export default function Popup() {
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="flex-1">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-white">
-                  Project Decrypt ’25
+                  Project Decrypt &#39;25
                 </h2>
                 <p className="text-sm sm:text-base md:text-lg text-gray-300 leading-relaxed">
-                  Get ready for Project Decrypt ’25 — a celebration of innovation and problem-solving.
+                  Get ready for Project Decrypt &#39;25 — a celebration of innovation and problem-solving.
                   Collaborate with brilliant minds, tackle exciting challenges, and bring your ideas to life.
                 </p>
 
