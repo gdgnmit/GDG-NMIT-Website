@@ -6,6 +6,7 @@ import ContactUsHome from "@/components/ContactUsHome";
 import WhatWeDo from "@/components/WhatWeDo";
 import Loader from "@/components/Loader";
 import UpcomingEvent from "@/components/UpcomingEvent";
+import Popup from "@/components/Popup"
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -21,6 +22,7 @@ export default function Home() {
         <Loader className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />
       ) : (
         <>
+          <Popup />
           <HomePage />
           <WhatWeDo />
           <UpcomingEvent />
