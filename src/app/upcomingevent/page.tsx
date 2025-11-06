@@ -261,24 +261,42 @@ export default function UpcomingEventPage() {
                           )}
 
                           {/* Event Card */}
-                          <div
-                            className={`relative ${isLeft ? "md:mr-8" : "md:ml-8"} rounded-xl p-6 transition-all duration-300 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.25)] hover:shadow-[0_18px_40px_-12px_rgba(59,130,246,0.28),0_-14px_30px_-16px_rgba(59,130,246,0.24),14px_0_28px_-16px_rgba(59,130,246,0.22),-14px_0_28px_-16px_rgba(59,130,246,0.22)] border border-gray-200/60 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl hover:ring-1 hover:ring-blue-500/30`}
-                          >
-                            {/* Time Badge */}
-                            <div className="inline-block mb-3 px-4 py-1.5 bg-gradient-to-r from-g-blue to-g-green text-white text-sm font-bold rounded-full shadow-sm">
-                              {event.time}
+                          <motion.div
+                            initial={{
+                              opacity: 0,
+                              x: typeof window !== "undefined" && window.innerWidth < 768
+                                ? 150 // Mobile: all from right
+                                : isLeft
+                                  ? -300 // Desktop: left side slide in from left
+                                  : 300, // Desktop: right side slide in from right
+                            }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 80,
+                              damping: 18,
+                              duration: 1.4,
+                            }}
+                            viewport={{ once: true, amount: 0.3 }}>
+                            <div
+                              className={`relative ${isLeft ? "md:mr-8" : "md:ml-8"} rounded-xl p-6 transition-all duration-300 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.25)] hover:shadow-[0_18px_40px_-12px_rgba(59,130,246,0.28),0_-14px_30px_-16px_rgba(59,130,246,0.24),14px_0_28px_-16px_rgba(59,130,246,0.22),-14px_0_28px_-16px_rgba(59,130,246,0.22)] border border-gray-200/60 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl hover:ring-1 hover:ring-blue-500/30`}
+                            >
+                              {/* Time Badge */}
+                              <div className="inline-block mb-3 px-4 py-1.5 bg-gradient-to-r from-g-blue to-g-green text-white text-sm font-bold rounded-full shadow-sm">
+                                {event.time}
+                              </div>
+
+                              {/* Event Title */}
+                              <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                                {event.title}
+                              </h3>
+
+                              {/* Description */}
+                              <p className="text-base text-gray-600 dark:text-gray-300 leading-relaxed">
+                                {event.description}
+                              </p>
                             </div>
-
-                            {/* Event Title */}
-                            <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3">
-                              {event.title}
-                            </h3>
-
-                            {/* Description */}
-                            <p className="text-base text-gray-600 dark:text-gray-300 leading-relaxed">
-                              {event.description}
-                            </p>
-                          </div>
+                          </motion.div>
                         </div>
                       );
                     })}
