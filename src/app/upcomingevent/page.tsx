@@ -99,8 +99,12 @@ export default function UpcomingEventPage() {
   }, [isReady, chars]);
 
   const sponsors = [
-    { name: "JetBrains", logo: "/jetbrains.png", link: "https://www.jetbrains.com", copyright: "Copyright c2025 JetBrains s.r.o. JetBrains and the JetBrains logo are trademarks of JetBrains s.r.o." },
+    { name: "JetBrains", logo: "/jetbrains.png", link: "https://www.jetbrains.com", copyright: "Copyright c2025 JetBrains s.r.o. JetBrains and the JetBrains logo are trademarks of JetBrains s.r.o.", invertInDark: false },
     { name: "Unstop", logo: "/unstop.png", link: "https://unstop.com", },
+    { name: "Visiting Cards", logo: "/VISITING_CARDS__2__page-0001-removebg-preview.png", link: "#", customSize: true, invertInDark: true },
+    { name: "GMC", logo: "/GMC LogoS.png", link: "https://givemycertificate.com/", customSize: true },
+    { name: "Dominos", logo: "/dominos_logo-removebg-preview.png", link: "https://www.dominos.co.in/", customSize: true },
+    { name: "Gemini", logo: "/Gemini_PrimaryLogo_FullColor.png", link: "https://gemini.google.com/app?is_sa=1&is_sa=1&android-min-version=301356232&ios-min-version=322.0&campaign_id=bkws&pt=9008&mt=8&ct=p-growth-sem-bkws&gad_campaignid=20357620749", customSize: true },
   ];
 
   const timelineEvents: TimelineEvent[] = [
@@ -311,18 +315,22 @@ export default function UpcomingEventPage() {
                 <div className="h-1 w-20 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full mt-2"></div>
               </div>
 
-              <div className="flex justify-center flex-wrap gap-6 md:gap-8">
+              <div className="flex justify-center flex-wrap gap-8 md:gap-12">
                 {sponsors.map((sponsor, index) => (
                   <div
                     key={sponsor.name}
-                    className="bg-white dark:bg-white rounded-xl p-6 md:p-8 shadow-md transition-all duration-300 border border-gray-200 dark:border-gray-700"
+                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-600 hover:scale-105"
                   >
-                    <div className="flex justify-center items-center">
-                      <Link href={sponsor.link} target="_blank">
+                    <div className="flex justify-center items-center w-[180px] h-[120px] md:w-[220px] md:h-[140px] p-6">
+                      <Link href={sponsor.link} target="_blank" className="flex justify-center items-center w-full h-full">
                         <img
                           src={sponsor.logo}
                           alt={sponsor.name}
-                          className="object-contain transition-all duration-300 max-h-16 md:max-h-20 w-auto"
+                          className={`object-contain transition-all duration-300 hover:opacity-80 ${
+                            sponsor.customSize ? 'max-h-24 md:max-h-28 max-w-[160px] md:max-w-[180px]' : 'max-h-16 md:max-h-20 max-w-[140px] md:max-w-[160px]'
+                          } ${
+                            sponsor.invertInDark ? 'dark:invert' : ''
+                          }`}
                         />
                       </Link>
                     </div>
