@@ -99,7 +99,7 @@ export default function UpcomingEventPage() {
   }, [isReady, chars]);
 
   const sponsors = [
-    { name: "JetBrains", logo: "/jetbrains.png", link: "https://www.jetbrains.com", copyright: "Copyright c2025 JetBrains s.r.o. JetBrains and the JetBrains logo are trademarks of JetBrains s.r.o.", invertInDark: true },
+    { name: "JetBrains", logo: "/jetbrains.png", link: "https://www.jetbrains.com", copyright: "Copyright c2025 JetBrains s.r.o. JetBrains and the JetBrains logo are trademarks of JetBrains s.r.o.", invertInDark: false },
     { name: "Unstop", logo: "/unstop.png", link: "https://unstop.com", },
     { name: "Visiting Cards", logo: "/VISITING_CARDS__2__page-0001-removebg-preview.png", link: "#", customSize: true, invertInDark: true },
     { name: "GMC", logo: "/GMC LogoS.png", link: "https://givemycertificate.com/", customSize: true },
