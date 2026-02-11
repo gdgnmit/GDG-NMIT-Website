@@ -30,7 +30,7 @@ export default function UpcomingEventPage() {
   });
   const titleRef = useRef<HTMLHeadingElement>(null);
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
-  const targetDate = new Date("2025-11-21T10:00:00").getTime();
+  const targetDate = new Date("2026-02-28T08:00:00").getTime();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -71,7 +71,7 @@ export default function UpcomingEventPage() {
     if (!titleRef.current || !isReady) return;
 
     const element = titleRef.current;
-    const originalText = "PROJECT DECRYPT '25";
+    const originalText = "CODESPRINT 4.0";
     let iteration = 0;
 
     const interval = setInterval(() => {
@@ -108,55 +108,56 @@ export default function UpcomingEventPage() {
   ];
 
   const timelineEvents: TimelineEvent[] = [
-    {
-      time: "9:00 AM - 10:00 AM",
-      title: "Registration & Setup",
-      description: "Get checked in and set up your workspace for the day ahead.",
-      location: "Main Lobby, NMIT Campus",
-    },
-    {
-      time: "10:00 AM - 10:30 AM",
-      title: "Inauguration Ceremony",
-      description: "Welcome address and event kickoff with keynote speakers.",
-      location: "APJ Abdul Kalam Auditorium",
-    },
-    {
-      time: "10:45 AM - 12:45 PM",
-      title: "Round 1 - Code in the Dark (Part 1)",
-      description: "First phase of the coding challenge spanning 2 hours. Test your skills on our Personalized IDE Platform.",
-      location: "5 Computer Labs",
-    },
-    {
-      time: "12:45 PM - 1:45 PM",
-      title: "Lunch Break + Networking Session",
-      description: "Enjoy vegetarian meals at the College Mess and network with fellow participants. Powered by Predator Energy.",
-      location: "College Mess & Common Area",
-    },
-    {
-      time: "1:45 PM - 4:45 PM",
-      title: "Round 1 - Code in the Dark (Part 2)",
-      description: "Continue the challenge with 3 more hours of intense coding competition.",
-      location: "5 Computer Labs",
-    },
-    {
-      time: "5:00 PM - 6:30 PM",
-      title: "Round 2 - Bitwise Puzzle Sprint",
-      description: "Individual challenge featuring bitwise puzzles. Compete on the HackerRank Platform for 1.5 hours.",
-      location: "Online Platform (HackerRank)",
-    },
-    {
-      time: "6:30 PM - 7:00 PM",
-      title: "Final Evaluation & Deliberation",
-      description: "Judges evaluate submissions and deliberate on the winners.",
-      location: "Judges Panel",
-    },
-    {
-      time: "7:00 PM - 7:30 PM",
-      title: "Closing Ceremony & Prize Distribution",
-      description: "Celebrate the winners and close the event with prize distribution and closing remarks.",
-      location: "Auditorium",
-    },
-  ];
+  {
+    time: "08:00 AM - 09:00 AM",
+    title: "Offline Team Registration",
+    description: "Teams report to the venue for offline registration and verification.",
+    location: "APJ Abdul Kalam Auditorium, NMIT",
+  },
+  {
+    time: "09:00 AM - 09:30 AM",
+    title: "Inauguration Ceremony",
+    description: "Formal inauguration of CodeSprint 4.0 with welcome address.",
+    location: "APJ Abdul Kalam Auditorium",
+  },
+  {
+    time: "10:00 AM - 11:00 AM",
+    title: "Trivia Round",
+    description: "Fun and challenging technical trivia round for all teams.",
+    location: "IS&E Labs, NMIT",
+  },
+  {
+    time: "10:00 AM - 11:30 AM",
+    title: "CTF Round",
+    description: "Capture The Flag round testing cybersecurity and problem-solving skills.",
+    location: "IS&E Labs, NMIT",
+  },
+  {
+    time: "11:30 AM - 12:00 PM",
+    title: "Break",
+    description: "Short refreshment break for participants.",
+    location: "Common Area",
+  },
+  {
+    time: "12:10 PM - 03:10 PM",
+    title: "Prototyping Phase",
+    description: "Teams work on building and implementing their project ideas.",
+    location: "IS&E Labs, NMIT",
+  },
+  {
+    time: "03:10 PM - 04:00 PM",
+    title: "Judgement & Review",
+    description: "Evaluation and review of team submissions by the judges.",
+    location: "Judges Panel",
+  },
+  {
+    time: "04:00 PM - 04:15 PM",
+    title: "Closing Ceremony & Prize Distribution",
+    description: "Announcement of winners and prize distribution.",
+    location: "APJ Abdul Kalam Auditorium",
+  },
+];
+
 
   return (
     <>
@@ -178,11 +179,11 @@ export default function UpcomingEventPage() {
                     className="text-5xl sm:text-6xl md:text-5xl lg:text-7xl font-bold leading-tight font-mono dark:text-white text-transparent bg-clip-text bg-gradient-to-r from-g-blue via-g-red to-g-yellow dark:bg-none"
                     style={{ letterSpacing: '0.02em' }}
                   >
-                    PROJECT DECRYPT &#39;25
+                    CODESPRINT 4.0
                   </h1>
 
                   <p className="text-xl sm:text-2xl md:text-3xl dark:text-gray-300 max-w-xl mx-auto font-medium leading-relaxed pt-4">
-                    Get ready to unlock innovation and showcase your coding skills
+                    Get ready to brings together passionate coders for an intense, multi-round battle of brains, speed, and innovation—push your limits and code your way to victory.
                   </p>
                 </motion.div>
               </div>
