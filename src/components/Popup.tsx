@@ -60,7 +60,7 @@ export default function Popup() {
 
             <div className="mb-4 sm:mb-6">
               <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-300 mb-2">
-                Join Our Next Event
+                Join Our Team
               </h3>
               <div className="h-1 w-20 sm:w-24 bg-gradient-to-r from-g-blue via-g-red to-g-yellow rounded-full" />
             </div>
@@ -68,10 +68,10 @@ export default function Popup() {
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="flex-1">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-white">
-                  CodeSprint 4.0 is Coming Soon!
+                  GDG NMIT is Hiring!
                 </h2>
                 <p className="text-sm sm:text-base md:text-lg text-gray-300 leading-relaxed">
-                  Get ready for CodeSprint 4.0 — where passionate coders clash in a high-energy, multi-round battle of brains, speed, and innovation. Push your limits and code your way to victory.
+                  Want to build, learn, and grow with GDG NMIT? We&apos;re looking for passionate students to join our team and contribute to exciting tech initiatives.
                 </p>
 
                 <div className="mt-5 sm:mt-7 flex justify-center items-center ">
