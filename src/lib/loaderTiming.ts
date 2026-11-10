@@ -2,7 +2,7 @@
 // appears. One place for these numbers keeps every page's loader the same.
 
 /** The landing page plays the full intro. */
-export const LANDING_LOADER_MS = 3500;
+export const LANDING_LOADER_MS = 2500;
 
 /** Every other page shows the same animation, briefly. */
 export const PAGE_LOADER_MS = 1500;
