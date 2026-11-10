@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ProjectCard from "@/components/ProjectCard";
 import Loader from "@/components/Loader";
+import { PAGE_LOADER_MS } from "@/lib/loaderTiming";
 
 const projects = [
   {
@@ -56,7 +57,7 @@ export default function ProjectsPage() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 3500);
+    const timer = setTimeout(() => setIsLoading(false), PAGE_LOADER_MS);
     return () => clearTimeout(timer);
   }, []);
 
@@ -69,7 +70,7 @@ export default function ProjectsPage() {
   };
 
   if (isLoading) {
-    return <Loader className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />;
+    return <Loader durationMs={PAGE_LOADER_MS} className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />;
   }
 
   return (

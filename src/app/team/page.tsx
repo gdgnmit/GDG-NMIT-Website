@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Team from '@/components/Team';
 import Loader from "@/components/Loader";
+import { PAGE_LOADER_MS } from "@/lib/loaderTiming";
 import axios, { AxiosError } from "axios";
 import type { TeamData, ApiResponse } from "@/types/team";
 
@@ -12,7 +13,7 @@ export default function TeamPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setTimerDone(true), 300);
+    const timer = setTimeout(() => setTimerDone(true), PAGE_LOADER_MS);
     return () => clearTimeout(timer);
   }, []);
 
@@ -49,7 +50,7 @@ export default function TeamPage() {
   const isReady = timerDone && dataReady;
 
   if (!isReady) {
-    return <Loader className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />;
+    return <Loader durationMs={PAGE_LOADER_MS} className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />;
   }
 
   if (error) {
