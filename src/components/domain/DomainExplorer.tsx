@@ -62,7 +62,7 @@ const DomainExplorer = ({ content }: { content: SiteContent }) => {
       <DomainPlayground onPick={pickAndScroll} />
 
       {/* The picked domain's details, right under the playground */}
-      <section id="explore" className="scroll-mt-20 bg-white dark:bg-g-almost-black px-4 sm:px-8 lg:px-12 pb-16 sm:pb-20">
+      <section id="explore" className="scroll-mt-20 bg-white dark:bg-g-almost-black px-4 sm:px-8 lg:px-12 pb-12 sm:pb-14">
         <div className="mx-auto max-w-5xl">
           <DomainDetail domain={findDomain(selectedId)} />
         </div>

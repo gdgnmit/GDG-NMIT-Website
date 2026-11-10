@@ -2,7 +2,7 @@
 import React, { useMemo, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import type { DomainInfo } from "@/data/domains";
-import { EASE_OUT, REVEAL, SPRING_PLAYFUL } from "@/lib/motion";
+import { EASE_OUT, SPRING_PLAYFUL } from "@/lib/motion";
 import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 import { useDomains } from "../ContentContext";
 import { DOMAIN_ICONS, domainHex, domainInk } from "../domainTheme";
@@ -91,20 +91,11 @@ const SkillConstellation = ({ onOpenDomain }: { onOpenDomain: (id: string) => vo
   })();
 
   return (
-    <section aria-labelledby="constellation-title" className="bg-white px-4 py-16 dark:bg-g-almost-black sm:px-8 sm:py-20 lg:px-12">
+    <section aria-label="Skills our domains share" className="bg-white px-4 pt-2 pb-8 dark:bg-g-almost-black sm:px-8 sm:pt-4 sm:pb-10 lg:px-12">
       <div className="mx-auto max-w-7xl">
-        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.6 }} transition={REVEAL}>
-          <h2 id="constellation-title" className="text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl">
-            Skills that connect us
-          </h2>
-          <p className="mt-4 max-w-2xl text-lg text-gray-700 dark:text-gray-300">
-            Every star is something our domains do or use. The ones in the middle are shared: that&apos;s where we work together.
-          </p>
-        </motion.div>
-
         <div
           ref={panelRef}
-          className="constellation-sky relative mt-8 overflow-hidden rounded-3xl border-2 border-black bg-[#0b0d12] shadow-[6px_6px_0_#000] dark:border-white/80 dark:shadow-[6px_6px_0_#4285f4]"
+          className="constellation-sky relative overflow-hidden rounded-3xl border-2 border-black bg-[#0b0d12] shadow-[6px_6px_0_#000] dark:border-white/80 dark:shadow-[6px_6px_0_#4285f4]"
           onPointerDown={(e) => {
             lastPointer.current = e.pointerType;
             if (e.target === e.currentTarget) setFocus(null); // tapping empty sky clears the highlight
