@@ -109,7 +109,7 @@ const DomainPlayground = ({ onPick }: { onPick: (id: string) => void }) => {
   }, []);
 
   return (
-    <section aria-label="Domain playground" className="bg-white dark:bg-g-almost-black px-4 sm:px-8 lg:px-12 py-10 sm:py-12">
+    <section aria-label="Domain playground" className="bg-white dark:bg-g-almost-black px-4 sm:px-8 lg:px-12 py-6 sm:py-8">
       <div className="mx-auto max-w-7xl">
         <p className="text-base sm:text-lg font-bold text-gray-700 dark:text-gray-300">
           Drag a domain into the black hole to open it. <span className="text-g-blue">Or just tap one.</span>{" "}

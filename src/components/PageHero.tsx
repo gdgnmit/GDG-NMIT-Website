@@ -63,7 +63,7 @@ const PageHero = ({ eyebrow, title, subtitle, color }: PageHeroCopy) => {
         ))}
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-6 sm:px-8 lg:px-12 py-12 sm:py-16">
+      <div className="relative mx-auto max-w-7xl px-6 sm:px-8 lg:px-12 pt-12 pb-8 sm:pt-16 sm:pb-10">
         <motion.span
           initial={enter({ opacity: 0, scale: 0.6, rotate: -14 })}
           animate={{ opacity: 1, scale: 1, rotate: -3 }}

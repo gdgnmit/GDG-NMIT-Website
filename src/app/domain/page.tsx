@@ -8,7 +8,7 @@ import "@/styles/motion.css";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Domains | GDG NMIT",
+  title: "Domains",
   description:
     "Explore the domains of GDG NMIT: Tech, Design, PR & Marketing, Sponsorship & Finance and Documentation. See what each domain does and how an event comes together.",
 };

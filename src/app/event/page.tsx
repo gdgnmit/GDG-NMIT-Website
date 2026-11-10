@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 
 import Event from '@/components/Event';
 import Loader from "@/components/Loader";
+import { PAGE_LOADER_MS } from "@/lib/loaderTiming";
 import axios from "axios";
 import type { EventData } from '@/components/EventCard';
 
@@ -14,7 +15,7 @@ export default function EventPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setTimerDone(true), 3500);
+    const timer = setTimeout(() => setTimerDone(true), PAGE_LOADER_MS);
     return () => clearTimeout(timer);
   }, []);
 
@@ -38,7 +39,7 @@ export default function EventPage() {
   const isReady = timerDone && dataReady;
 
   if (!isReady) {
-    return <Loader className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />;
+    return <Loader durationMs={PAGE_LOADER_MS} className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />;
   }
   if (error) {
     return <div className="min-h-screen flex items-center justify-center text-red-600">{error}</div>;

@@ -9,5 +9,3 @@ export const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 export const SPRING_UI = { type: "spring", duration: 0.3, bounce: 0 } as const;
 /** Playful moments (drags, toys, celebrations): a touch of bounce. */
 export const SPRING_PLAYFUL = { type: "spring", duration: 0.5, bounce: 0.2 } as const;
-/** Sections rising into view as you scroll. */
-export const REVEAL = { duration: 0.5, ease: EASE_OUT } as const;

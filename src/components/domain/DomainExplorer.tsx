@@ -11,6 +11,8 @@ import SkillConstellation from "./constellation/SkillConstellation";
 import LeadsSection from "./LeadsSection";
 import DinoEasterEgg from "./dino/DinoEasterEgg";
 import { useDomainCrew } from "./useDomainCrew";
+import Loader from "@/components/Loader";
+import { PAGE_LOADER_MS } from "@/lib/loaderTiming";
 
 const DEEP_LINK_SCROLL_DELAY_MS = 300;
 
@@ -22,8 +24,16 @@ function scrollToDetail() {
 
 const DomainExplorer = ({ content }: { content: SiteContent }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const findDomain = useCallback((id: string | null) => content.domains.find((d) => d.id === id), [content.domains]);
   const crew = useDomainCrew();
+
+  // The site-wide loader. It covers the page rather than replacing it, so the
+  // playground and a deep link's scroll can get ready underneath.
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), PAGE_LOADER_MS);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Open a domain's details and scroll to them: from the playground (a tap or
   // a throw into the black hole), or a deep link like /domain#tech (home page cards).
@@ -55,6 +65,7 @@ const DomainExplorer = ({ content }: { content: SiteContent }) => {
   return (
     <ContentProvider content={content}>
     <MotionConfig reducedMotion="user">
+      {isLoading && <Loader durationMs={PAGE_LOADER_MS} className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />}
       <div className="pt-16">
         <PageHero {...PAGE_HEROES.domains} />
       </div>
@@ -62,7 +73,7 @@ const DomainExplorer = ({ content }: { content: SiteContent }) => {
       <DomainPlayground onPick={pickAndScroll} />
 
       {/* The picked domain's details, right under the playground */}
-      <section id="explore" className="scroll-mt-20 bg-white dark:bg-g-almost-black px-4 sm:px-8 lg:px-12 pb-16 sm:pb-20">
+      <section id="explore" className="scroll-mt-20 bg-white dark:bg-g-almost-black px-4 sm:px-8 lg:px-12 pb-12 sm:pb-14">
         <div className="mx-auto max-w-5xl">
           <DomainDetail domain={findDomain(selectedId)} />
         </div>

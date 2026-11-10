@@ -2,19 +2,20 @@
 import React, { useState, useEffect } from "react";
 import About from "@/components/About";
 import Loader from "@/components/Loader";
+import { PAGE_LOADER_MS } from "@/lib/loaderTiming";
 
 export default function TeamPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 3500);
+    const timer = setTimeout(() => setIsLoading(false), PAGE_LOADER_MS);
     return () => clearTimeout(timer);
   }, []);
 
   return (
     <>
       {isLoading ? (
-        <Loader className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />
+        <Loader durationMs={PAGE_LOADER_MS} className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />
       ) : (
         <About />
       )}
