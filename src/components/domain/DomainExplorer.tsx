@@ -8,9 +8,7 @@ import PageHero from "@/components/PageHero";
 import { PAGE_HEROES } from "@/data/pageHeroes";
 import DomainDetail from "./DomainDetail";
 import SkillConstellation from "./constellation/SkillConstellation";
-import LeadsSection from "./LeadsSection";
 import DinoEasterEgg from "./dino/DinoEasterEgg";
-import { useDomainCrew } from "./useDomainCrew";
 import Loader from "@/components/Loader";
 import { PAGE_LOADER_MS } from "@/lib/loaderTiming";
 
@@ -26,7 +24,6 @@ const DomainExplorer = ({ content }: { content: SiteContent }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const findDomain = useCallback((id: string | null) => content.domains.find((d) => d.id === id), [content.domains]);
-  const crew = useDomainCrew();
 
   // The site-wide loader. It covers the page rather than replacing it, so the
   // playground and a deep link's scroll can get ready underneath.
@@ -79,7 +76,6 @@ const DomainExplorer = ({ content }: { content: SiteContent }) => {
         </div>
       </section>
 
-      <LeadsSection crew={crew} />
       <DinoEasterEgg />
     </MotionConfig>
     </ContentProvider>
