@@ -133,7 +133,19 @@ const domainNames: Record<string, string> = {
   "pr & marketing": "PR & Marketing",
   "social media": "Social Media",
   operations: "Operations",
-  finance: "Finance & Sponsorship",
+  finance: "Sponsorship & Finance",
+};
+
+const domainPillNames: Record<string, string> = {
+  all: "All Domains",
+  club: "Heads & Advisors",
+  tech: "Technical Team",
+  design: "Design Team",
+  "content and documentation": "Content & Docs",
+  "pr & marketing": "PR & Marketing",
+  "social media": "Social Media",
+  operations: "Operations",
+  finance: "Finance",
 };
 
 function isMemberArray(value: TierMembers): value is Member[] {
@@ -185,21 +197,15 @@ function getDomainMemberSplit(domain: string, members: Member[]): {
     return t === "member" || t === "recruit" || t === "past";
   });
 
+  const explicitCore = members.filter((m) => {
+    const t = m.tier?.toLowerCase()?.trim();
+    return t !== "member" && t !== "recruit" && t !== "past";
+  });
+
   if (explicitOther.length > 0) {
-    const explicitCore = members.filter((m) => {
-      const t = m.tier?.toLowerCase()?.trim();
-      return t !== "member" && t !== "recruit" && t !== "past";
-    });
     return {
       coreMembers: explicitCore.length > 0 ? explicitCore : members.slice(0, 4),
       otherMembers: explicitCore.length > 0 ? explicitOther : members.slice(4),
-    };
-  }
-
-  if (members.length > 4) {
-    return {
-      coreMembers: members.slice(0, 4),
-      otherMembers: members.slice(4),
     };
   }
 
@@ -806,18 +812,18 @@ const Team: React.FC<TeamProps> = ({ teamData }) => {
 
         {/* ---------------- DOMAIN FILTER PILLS ---------------- */}
         {activeDomains.length > 1 && (
-          <div className="flex flex-wrap gap-2.5 mb-14">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 mb-14">
             {["all", ...activeDomains].map((d) => (
               <button
                 key={d}
                 onClick={() => setSelectedDomain(d)}
-                className={`px-4 py-2 rounded-full text-xs font-mono font-bold border-2 transition-all cursor-pointer ${
+                className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-mono font-bold border-2 transition-all cursor-pointer ${
                   selectedDomain === d
                     ? "bg-[#4285F4] text-white border-[#4285F4] shadow-md -translate-y-0.5"
                     : "bg-white dark:bg-[#12141A] text-gray-700 dark:text-gray-400 border-gray-200 dark:border-white/10 hover:text-black dark:hover:text-white hover:border-gray-400 dark:hover:border-white/30 shadow-sm"
                 }`}
               >
-                {d === "all" ? "All Domains" : domainNames[d] ?? d}
+                {domainPillNames[d] ?? domainNames[d] ?? d}
               </button>
             ))}
           </div>
