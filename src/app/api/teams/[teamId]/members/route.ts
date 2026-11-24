@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { ObjectId } from "mongodb";
-import { connectToDatabase } from "../../../../../lib/mongodb";
+import { getDb } from "../../../../../lib/mongodb";
 import cloudinary from "../../../../../lib/cloudinary";
 
 export async function POST(
@@ -15,8 +15,7 @@ export async function POST(
     }
 
     const teamObjectId = new ObjectId(teamId);
-    const { client } = await connectToDatabase();
-    const db = client.db();
+    const db = await getDb();
 
     const teams = db.collection("teams");
     const members = db.collection("members");

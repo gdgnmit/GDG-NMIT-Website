@@ -2,7 +2,7 @@
 // (no database, slow database, bad saved data) falls back to the defaults in
 // src/data so the public site always renders.
 
-import { connectToDatabase } from "@/lib/mongodb";
+import { getDb } from "@/lib/mongodb";
 import {
   CONTENT_SECTIONS,
   DEFAULT_CONTENT,
@@ -41,8 +41,8 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 }
 
 async function collection() {
-  const { client } = await withTimeout(connectToDatabase(), DB_TIMEOUT_MS);
-  return client.db().collection<ContentDoc>(COLLECTION);
+  const db = await withTimeout(getDb(), DB_TIMEOUT_MS);
+  return db.collection<ContentDoc>(COLLECTION);
 }
 
 /** Saved content merged over the defaults. Never throws. */

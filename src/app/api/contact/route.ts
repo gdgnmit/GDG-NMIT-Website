@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "../../../lib/mongodb";
+import { getDb } from "../../../lib/mongodb";
 
 export async function POST(request: NextRequest) {
-  const { client } = await connectToDatabase();
-  const db = client.db(""); 
+  const db = await getDb(); 
   const data = await request.json();
   const contact = {
     name: data.name,

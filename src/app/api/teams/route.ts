@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
-import { connectToDatabase } from "../../../lib/mongodb";
+import { getDb } from "../../../lib/mongodb";
 
 const standardTiers = [
   "faculty coordinator",
@@ -36,6 +36,9 @@ type DomainStruct = {
   member?: { past?: Member[] };
   recruit?: Member[];
 };
+
+// Team data changes rarely: let the CDN/browser reuse it briefly.
+const CACHE = { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" };
 
 function domainStruct(): DomainStruct {
   const obj: DomainStruct = { 
@@ -122,8 +125,7 @@ function groupMembers(members: Member[]) {
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const yearStr = url.searchParams.get("year");
-  const { client } = await connectToDatabase();
-  const db = client.db();
+  const db = await getDb();
 
   if (yearStr) {
     const year = parseInt(yearStr, 10);
@@ -143,32 +145,29 @@ export async function GET(request: NextRequest) {
       team: { ...team, members: grouped.memberIdsByDomain },
       members: grouped.members,
       year,
-    });
+    }, { headers: CACHE });
   }
 
-  const teams = await db.collection("teams").find({}).toArray();
-  const allTeamsWithMembers = await Promise.all(
-    teams.map(async (team) => {
-      const members = await db
-        .collection<Member>("members")
-        .find({ teamId: new ObjectId(team._id) })
-        .toArray();
-      const grouped = groupMembers(members);
+  const teams = await db.collection("teams").find({}).sort({ year: -1 }).toArray();
+  const allMembers = await db
+    .collection<Member & { teamId?: ObjectId | string }>("members")
+    .find({ teamId: { $in: teams.map((team) => team._id) } })
+    .toArray();
+  const allTeamsWithMembers = teams.map((team) => {
+    const members = allMembers.filter((m) => String(m.teamId) === String(team._id));
+    const grouped = groupMembers(members);
+    return {
+      team: { ...team, members: grouped.memberIdsByDomain },
+      members: grouped.members,
+      year: team.year,
+    };
+  });
 
-      return {
-        team: { ...team, members: grouped.memberIdsByDomain },
-        members: grouped.members,
-        year: team.year,
-      };
-    })
-  );
-
-  return NextResponse.json({ teams: allTeamsWithMembers });
+  return NextResponse.json({ teams: allTeamsWithMembers }, { headers: CACHE });
 }
 
 export async function POST(request: NextRequest) {
-  const { client } = await connectToDatabase();
-  const db = client.db();
+  const db = await getDb();
   const teams = db.collection("teams");
 
   const body = (await request.json()) as { year?: string; name?: string };
