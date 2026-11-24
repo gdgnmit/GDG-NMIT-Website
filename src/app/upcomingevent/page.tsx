@@ -1,7 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Loader from "@/components/Loader";
-import { PAGE_LOADER_MS } from "@/lib/loaderTiming";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -49,7 +47,6 @@ function getTimeRemaining(targetIso: string) {
 }
 
 export default function UpcomingEventPage() {
-  const [isLoading, setIsLoading] = useState(true);
   const [events, setEvents] = useState<EventItem[]>([]);
   const [, setTick] = useState(0);
 
@@ -71,11 +68,6 @@ export default function UpcomingEventPage() {
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), PAGE_LOADER_MS);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
     const interval = setInterval(() => setTick((t) => t + 1), 1000);
     return () => clearInterval(interval);
   }, []);
@@ -93,9 +85,7 @@ export default function UpcomingEventPage() {
 
   return (
     <>
-      {isLoading ? (
-        <Loader durationMs={PAGE_LOADER_MS} className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />
-      ) : (
+      {(
         <div className="min-h-screen bg-white dark:bg-g-almost-black text-gray-900 dark:text-white pt-24 pb-16">
           <div className="max-w-5xl mx-auto px-5 sm:px-8">
             <div className="text-center mb-6">

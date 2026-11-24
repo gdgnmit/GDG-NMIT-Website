@@ -1,10 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ProjectCard from "@/components/ProjectCard";
-import Loader from "@/components/Loader";
-import { PAGE_LOADER_MS } from "@/lib/loaderTiming";
 
 const projects = [
   {
@@ -50,16 +48,10 @@ const projects = [
 ];
 
 export default function ProjectsPage() {
-  const [isLoading, setIsLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const [isHoverDisabled, setIsHoverDisabled] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), PAGE_LOADER_MS);
-    return () => clearTimeout(timer);
-  }, []);
 
   const nextSlide = () => {
     if (currentIndex < projects.length - 3) setCurrentIndex(currentIndex + 1);
@@ -68,10 +60,6 @@ export default function ProjectsPage() {
   const prevSlide = () => {
     if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
   };
-
-  if (isLoading) {
-    return <Loader durationMs={PAGE_LOADER_MS} className="fixed inset-0 z-[9999] bg-white dark:bg-g-almost-black" />;
-  }
 
   return (
     <div className="relative min-h-screen flex flex-col px-10 py-20 bg-grid overflow-hidden">
