@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { getDb } from "./mongodb";
+import { startOfTodayIST } from "./eventDates";
 
 /**
  * Link-preview banner for /upcomingevent, drawn as an event ticket.
@@ -30,11 +31,10 @@ const PAGE = "#e8eaed";
 async function getNextEvent(): Promise<BannerEvent | null> {
   try {
     const db = await getDb();
-    // Same rule as /api/events (date >= now), so the banner and the page agree on what's upcoming
-    const now = new Date();
+    // Same rule as /api/events (today's IST date), so an event keeps its ticket for its whole day
     const event = await db
       .collection<BannerEvent>("events")
-      .find({ date: { $gte: now }, title: { $exists: true, $ne: "" } })
+      .find({ date: { $gte: startOfTodayIST() }, title: { $exists: true, $ne: "" } })
       .sort({ date: 1 })
       .limit(1)
       .next();
