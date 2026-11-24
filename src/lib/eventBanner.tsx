@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { connectToDatabase } from "./mongodb";
+import { getDb } from "./mongodb";
 
 /**
  * Link-preview banner for /upcomingevent, drawn as an event ticket.
@@ -29,11 +29,10 @@ const PAGE = "#e8eaed";
 
 async function getNextEvent(): Promise<BannerEvent | null> {
   try {
-    const { client } = await connectToDatabase();
+    const db = await getDb();
     // Same rule as /api/events (date >= now), so the banner and the page agree on what's upcoming
     const now = new Date();
-    const event = await client
-      .db()
+    const event = await db
       .collection<BannerEvent>("events")
       .find({ date: { $gte: now }, title: { $exists: true, $ne: "" } })
       .sort({ date: 1 })

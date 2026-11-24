@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "../../../lib/mongodb";
+import { getDb } from "../../../lib/mongodb";
 import { startOfTodayIST } from "../../../lib/eventDates";
 
 interface EventData {
@@ -40,8 +40,7 @@ export async function GET() {
   const currentDate = startOfTodayIST();
 
   try {
-    const { client } = await connectToDatabase();
-    const db = client.db();
+    const db = await getDb();
     const events = db.collection<RawEvent>("events");
 
     const pastEvents = await events.find({ date: { $lt: currentDate } }).sort({ date: 1 }).toArray();
@@ -63,7 +62,7 @@ export async function GET() {
       pastEvents: serialize(pastEvents),
       upcomingEvents: serialize(upcomingEvents),
       currentDate: formatDateDDMMYYYY(currentDate),
-    });
+    }, { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -72,8 +71,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { client } = await connectToDatabase();
-    const db = client.db();
+    const db = await getDb();
     const events = db.collection("events");
 
     const body = (await request.json()) as {

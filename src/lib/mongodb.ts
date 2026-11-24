@@ -36,3 +36,13 @@ export async function connectToDatabase() {
 
   return { client: await globalForMongo._mongoClientPromise };
 }
+
+// The site's data lives in this database. Set MONGODB_DB to use another one
+// (the connection string itself has no database name, so the driver would
+// otherwise fall back to the empty "test" database).
+export const DB_NAME = process.env.MONGODB_DB || 'gdg_nmit';
+
+export async function getDb() {
+  const { client } = await connectToDatabase();
+  return client.db(DB_NAME);
+}
